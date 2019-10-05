@@ -1,0 +1,298 @@
+<!DOCTYPE HTML>
+<html lang="pt-BR" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Memoization com Closures - ((Functional (Scheme)) Maths)</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Oficina de Matemática Funcional em Scheme da SECCOM UFSC 2019">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
+    </head>
+    <body class="navy">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = "navy";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="about.html"><strong aria-hidden="true">1.</strong> Sobre a Oficina</a></li><li><ol class="section"><li><a href="bib.html"><strong aria-hidden="true">1.1.</strong> Bibliografia</a></li></ol></li><li><a href="intro.html"><strong aria-hidden="true">2.</strong> Computando com Scheme</a></li><li><ol class="section"><li><a href="lang.html"><strong aria-hidden="true">2.1.</strong> Sobre Linguagens</a></li><li><a href="eg.html"><strong aria-hidden="true">2.2.</strong> Introdução à Scheme</a></li></ol></li><li><a href="recursion.html"><strong aria-hidden="true">3.</strong> Repetição via Recursão</a></li><li><ol class="section"><li><a href="rec.html"><strong aria-hidden="true">3.1.</strong> Recursão Linear</a></li><li><a href="iter.html"><strong aria-hidden="true">3.2.</strong> Tail-Recursion</a></li><li><a href="lin.html"><strong aria-hidden="true">3.3.</strong> Linearização</a></li></ol></li><li><a href="functional.html"><strong aria-hidden="true">4.</strong> Abstração Funcional</a></li><li><ol class="section"><li><a href="pow.html"><strong aria-hidden="true">4.1.</strong> Potenciação Rápida</a></li><li><a href="fix.html"><strong aria-hidden="true">4.2.</strong> Pontos Fixos</a></li></ol></li><li><a href="meta.html"><strong aria-hidden="true">5.</strong> Abstração Metalinguística</a></li><li><ol class="section"><li><a href="sym.html"><strong aria-hidden="true">5.1.</strong> Processamento Simbólico</a></li><li><a href="diff.html"><strong aria-hidden="true">5.2.</strong> Diferenciação Analítica</a></li></ol></li><li><a href="systems.html"><strong aria-hidden="true">6.</strong> Sistemas Computacionais</a></li><li><ol class="section"><li><a href="memo.html" class="active"><strong aria-hidden="true">6.1.</strong> Memoization com Closures</a></li><li><a href="constr.html"><strong aria-hidden="true">6.2.</strong> Objetos Dinâmicos</a></li><li><a href="inf.html"><strong aria-hidden="true">6.3.</strong> Lazy Streams no Infinito</a></li></ol></li><li><a href="discussion.html"><strong aria-hidden="true">7.</strong> Finale</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">((Functional (Scheme)) Maths)</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2><a class="header" href="#memoization-com-closures" id="memoization-com-closures"><em>Memoization</em> com <em>Closures</em></a></h2>
+<p>Se analisarmos a primeira definição do procedimento <code>fib</code>, percebemos que seu principal problema é a computação de resultados que já foram vistos e calculados anteriormente.
+Uma forma de contornar esse problema seria fazer com que o processo se lembre desses resultados parciais em um tipo de memória, evitando assim uma computação que pode vir a ser custosa.
+Essa técnica de <a href="https://en.wikipedia.org/wiki/Dynamic_programming">programação dinâmica</a> se chama <a href="https://en.wikipedia.org/wiki/Memoization"><em>memoization</em></a>.</p>
+<pre><code class="language-scheme">(define (fib n)
+  (display &quot;Computing Fib of &quot;) (display n) (newline)
+  (cond ((= n 0) 0)
+        ((= n 1) 1)
+        (else (+ (memo-fib (- n 1))
+                 (memo-fib (- n 2))))))
+
+(define cache (make-table))
+
+(define (memo-fib n)
+  (let ((hit? (lookup cache n)))
+    ;; hit or miss
+    (or hit?
+        (let ((result (fib n)))
+          (insert! cache n result)
+          result))))
+
+;; (clear-table! cache)
+</code></pre>
+<blockquote>
+<p>Scheme adota a convenção de sinalizar procedimentos que geram efeitos colaterais com o sufixo <code>!</code>. <br/></p>
+</blockquote>
+<pre><code class="language-scheme">(define (make-table)
+  (cons '*table* '()))
+
+(define (lookup table key)
+  (let ((record (assoc key (cdr table))))
+    (cond (record =&gt; cdr)
+          (else #f))))
+
+(define (insert! table key value)
+  (cond ((assoc key (cdr table)) =&gt; (lambda (record) (set-cdr! record value)))
+        (else (set-cdr! table
+                        (cons (cons key value) (cdr table)))))
+  'ok)
+
+(define (clear-table! table)
+  (set-cdr! table '())
+  'ok)
+
+; (define (assoc k a-list)
+;   (cond ((null? a-list) #f)
+;         ((equal? k (caar a-list)) (car a-list))
+;         (else (assoc k (cdr a-list)))))
+</code></pre>
+<blockquote>
+<p>Tomando a tabela apresentada como exemplo, tente implementar uma pilha (LIFO) com estado mutável.
+Depois, explique como fazer o mesmo através de programação puramente funcional.</p>
+</blockquote>
+<p>A estrutura de dados implementada é um exemplo de sistema cujos resultados dependem não somente das entradas dadas, mas também do seu estado interno.</p>
+<p>Perceba que a única coisa atrelada à sequência de Fibonacci no corpo de <code>memo-fib</code> é a chamada da função <code>fib</code>.
+Podemos generalizar essa ideia em uma função de alta ordem que retorna um <em>closure</em> contendo sua própria &quot;memória&quot;.</p>
+<pre><code class="language-scheme">(define (memoize proc)
+  (let ((cache (make-table)))
+    (define (delegate . args)
+      (let ((hit (lookup cache args)))
+        (or hit
+            (let ((result (apply proc args)))
+              (insert! cache args result)
+              result))))
+    delegate))
+</code></pre>
+<pre><code class="language-scheme">(define memo-fib (memoize
+  (lambda (n)
+    (display &quot;Computing Fib of &quot;) (display n) (newline)
+    (cond ((= n 0) 0)
+          ((= n 1) 1)
+          (else (+ (memo-fib (- n 1))
+                   (memo-fib (- n 2))))))))
+
+(define memo-sqrt (memoize sqrt))
+
+;; &lt;etc&gt;
+</code></pre>
+<p>Apesar de termos melhorado a performance do procedimento antes exponencial para linear, o fizemos em troca de memória da máquina.
+Além disso, o sistema de busca de resultados armazenados não é muito eficiente: se na avaliação de <code>(+ (memo-fib (- n 1)) (memo-fib (- n 2)))</code> as entradas na <em>cache</em> estiverem em ordem crescente, seria necessário varrer a lista do início até encontrar a chave <code>(- n 1)</code> e depois recomeçar o processo indo do ínicio da tabela até a entrada <code>(- n 2)</code>.</p>
+<p>Por causa de situações como estas, implementações sérias de Scheme provêm formas de utilizar estruturas de dados mais eficientes projetadas em outras linguagens.
+Em Guile, por exemplo, poderíamos utilizar uma <em>hashtable</em> para chegar o mais próximo possível de calcular um dado número de Fibonacci em tempo constante (supondo que já tenha sido pré-computado).</p>
+<pre><code class="language-scheme">;; GUILE
+(define make-table make-hash-table)
+(define lookup hash-ref)
+(define insert! hash-set!)
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="systems.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="constr.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="systems.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="constr.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

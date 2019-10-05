@@ -1,0 +1,692 @@
+<!DOCTYPE HTML>
+<html lang="pt-BR" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Sistemas Computacionais - ((Functional (Scheme)) Maths)</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Oficina de Matemática Funcional em Scheme da SECCOM UFSC 2019">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
+    </head>
+    <body class="navy">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = "navy";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="about.html"><strong aria-hidden="true">1.</strong> Sobre a Oficina</a></li><li><ol class="section"><li><a href="bib.html"><strong aria-hidden="true">1.1.</strong> Bibliografia</a></li></ol></li><li><a href="intro.html"><strong aria-hidden="true">2.</strong> Computando com Scheme</a></li><li><ol class="section"><li><a href="lang.html"><strong aria-hidden="true">2.1.</strong> Sobre Linguagens</a></li><li><a href="eg.html"><strong aria-hidden="true">2.2.</strong> Introdução à Scheme</a></li></ol></li><li><a href="recursion.html"><strong aria-hidden="true">3.</strong> Repetição via Recursão</a></li><li><ol class="section"><li><a href="rec.html"><strong aria-hidden="true">3.1.</strong> Recursão Linear</a></li><li><a href="iter.html"><strong aria-hidden="true">3.2.</strong> Tail-Recursion</a></li><li><a href="lin.html"><strong aria-hidden="true">3.3.</strong> Linearização</a></li></ol></li><li><a href="functional.html"><strong aria-hidden="true">4.</strong> Abstração Funcional</a></li><li><ol class="section"><li><a href="pow.html"><strong aria-hidden="true">4.1.</strong> Potenciação Rápida</a></li><li><a href="fix.html"><strong aria-hidden="true">4.2.</strong> Pontos Fixos</a></li></ol></li><li><a href="meta.html"><strong aria-hidden="true">5.</strong> Abstração Metalinguística</a></li><li><ol class="section"><li><a href="sym.html"><strong aria-hidden="true">5.1.</strong> Processamento Simbólico</a></li><li><a href="diff.html"><strong aria-hidden="true">5.2.</strong> Diferenciação Analítica</a></li></ol></li><li><a href="systems.html" class="active"><strong aria-hidden="true">6.</strong> Sistemas Computacionais</a></li><li><ol class="section"><li><a href="memo.html"><strong aria-hidden="true">6.1.</strong> Memoization com Closures</a></li><li><a href="constr.html"><strong aria-hidden="true">6.2.</strong> Objetos Dinâmicos</a></li><li><a href="inf.html"><strong aria-hidden="true">6.3.</strong> Lazy Streams no Infinito</a></li></ol></li><li><a href="discussion.html"><strong aria-hidden="true">7.</strong> Finale</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">((Functional (Scheme)) Maths)</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#sistemas-computacionais" id="sistemas-computacionais">Sistemas Computacionais</a></h1>
+<p>Até então temos visto programas que operam sobre dados em uma grande composição de funções, onde a saída de um procedimento alimenta a entrada de outro e assim por diante.
+O <strong>fluxo de dados</strong> é sempre unidirecional e <strong>depende somente do arranjo dos procedimentos e das entradas iniciais</strong>, caracterizando programas <strong>puramente funcionais</strong>.
+Além disso, o modelo aplicado para computar o resultado de um programa é muito simples, bastando substituir aplicações de procedimentos por sua definição instanciada com os argumentos fornecidos.</p>
+<p>Alguns problemas exigem um <strong>fluxo de dados</strong> diferente.
+Gostaríamos de introduzir maneiras de alterar o comportamento do programa de formas diferentes <strong>dependendo do instante em que o sistema se encontra</strong>.</p>
+<h3><a class="header" href="#perceba-que-desde-o-início-da-oficina-até-este-ponto-jamais-fez-se-necessário-utilizar-conceitos-como-variáveis-atribuições-ou-estado-mutável-é-o-que-faremos-agora" id="perceba-que-desde-o-início-da-oficina-até-este-ponto-jamais-fez-se-necessário-utilizar-conceitos-como-variáveis-atribuições-ou-estado-mutável-é-o-que-faremos-agora">Perceba que, <strong>desde o início da oficina até este ponto, jamais fez-se necessário utilizar conceitos como variáveis, atribuições ou estado mutável</strong>; é o que faremos agora.</a></h3>
+<blockquote>
+<p>Na medida em que atribuições e ações de mudança são introduzidas na programação, acabamos de nos sujeitar a todos os problemas terríveis que vêm assolando filósofos por milhares de anos. (<a href="https://www.youtube.com/watch?v=dO1aqPBJCPg&amp;list=PLE18841CABEA24090&amp;index=9">Sussman, 1968</a>)</p>
+</blockquote>
+<p>Em Scheme, a ferramenta para tal é <code>set!</code> e seus derivados<a href="https://www.youtube.com/watch?v=yedzRWhi-9E&amp;list=PLE18841CABEA24090&amp;index=10">[2]</a>:</p>
+<pre><code class="language-scheme">(define count 10)
+(define (count-down)
+  (set! count (- count 1))
+  count)
+
+(define a (cons 1 2))
+(define b (cons a a))
+(define a (cons 3 2))
+b ; = ?
+
+(define a (cons 1 2))
+(define b (cons a a))
+(set-car! a 3)
+b ; = ?
+</code></pre>
+<blockquote>
+<p>Explique o bug no procedimento <code>set-fact</code>.</p>
+</blockquote>
+<pre><code class="language-scheme">(define (fact n)
+  (let loop ((i 1) (p 1))
+    (if (&gt; i n) p
+        (loop (+ i 1) (* p i)))))
+
+(define (set-fact n)
+  (let ((i 1) (p 1))
+    (let loop ()
+      (if (&gt; i n) p
+          (begin
+            (set! i (+ i 1))
+            (set! p (* p i))
+            (loop))))))
+</code></pre>
+<h2><a class="header" href="#memoization-com-closures" id="memoization-com-closures"><em>Memoization</em> com <em>Closures</em></a></h2>
+<p>Se analisarmos a primeira definição do procedimento <code>fib</code>, percebemos que seu principal problema é a computação de resultados que já foram vistos e calculados anteriormente.
+Uma forma de contornar esse problema seria fazer com que o processo se lembre desses resultados parciais em um tipo de memória, evitando assim uma computação que pode vir a ser custosa.
+Essa técnica de <a href="https://en.wikipedia.org/wiki/Dynamic_programming">programação dinâmica</a> se chama <a href="https://en.wikipedia.org/wiki/Memoization"><em>memoization</em></a>.</p>
+<pre><code class="language-scheme">(define (fib n)
+  (display &quot;Computing Fib of &quot;) (display n) (newline)
+  (cond ((= n 0) 0)
+        ((= n 1) 1)
+        (else (+ (memo-fib (- n 1))
+                 (memo-fib (- n 2))))))
+
+(define cache (make-table))
+
+(define (memo-fib n)
+  (let ((hit? (lookup cache n)))
+    ;; hit or miss
+    (or hit?
+        (let ((result (fib n)))
+          (insert! cache n result)
+          result))))
+
+;; (clear-table! cache)
+</code></pre>
+<blockquote>
+<p>Scheme adota a convenção de sinalizar procedimentos que geram efeitos colaterais com o sufixo <code>!</code>. <br/></p>
+</blockquote>
+<pre><code class="language-scheme">(define (make-table)
+  (cons '*table* '()))
+
+(define (lookup table key)
+  (let ((record (assoc key (cdr table))))
+    (cond (record =&gt; cdr)
+          (else #f))))
+
+(define (insert! table key value)
+  (cond ((assoc key (cdr table)) =&gt; (lambda (record) (set-cdr! record value)))
+        (else (set-cdr! table
+                        (cons (cons key value) (cdr table)))))
+  'ok)
+
+(define (clear-table! table)
+  (set-cdr! table '())
+  'ok)
+
+; (define (assoc k a-list)
+;   (cond ((null? a-list) #f)
+;         ((equal? k (caar a-list)) (car a-list))
+;         (else (assoc k (cdr a-list)))))
+</code></pre>
+<blockquote>
+<p>Tomando a tabela apresentada como exemplo, tente implementar uma pilha (LIFO) com estado mutável.
+Depois, explique como fazer o mesmo através de programação puramente funcional.</p>
+</blockquote>
+<p>A estrutura de dados implementada é um exemplo de sistema cujos resultados dependem não somente das entradas dadas, mas também do seu estado interno.</p>
+<p>Perceba que a única coisa atrelada à sequência de Fibonacci no corpo de <code>memo-fib</code> é a chamada da função <code>fib</code>.
+Podemos generalizar essa ideia em uma função de alta ordem que retorna um <em>closure</em> contendo sua própria &quot;memória&quot;.</p>
+<pre><code class="language-scheme">(define (memoize proc)
+  (let ((cache (make-table)))
+    (define (delegate . args)
+      (let ((hit (lookup cache args)))
+        (or hit
+            (let ((result (apply proc args)))
+              (insert! cache args result)
+              result))))
+    delegate))
+</code></pre>
+<pre><code class="language-scheme">(define memo-fib (memoize
+  (lambda (n)
+    (display &quot;Computing Fib of &quot;) (display n) (newline)
+    (cond ((= n 0) 0)
+          ((= n 1) 1)
+          (else (+ (memo-fib (- n 1))
+                   (memo-fib (- n 2))))))))
+
+(define memo-sqrt (memoize sqrt))
+
+;; &lt;etc&gt;
+</code></pre>
+<p>Apesar de termos melhorado a performance do procedimento antes exponencial para linear, o fizemos em troca de memória da máquina.
+Além disso, o sistema de busca de resultados armazenados não é muito eficiente: se na avaliação de <code>(+ (memo-fib (- n 1)) (memo-fib (- n 2)))</code> as entradas na <em>cache</em> estiverem em ordem crescente, seria necessário varrer a lista do início até encontrar a chave <code>(- n 1)</code> e depois recomeçar o processo indo do ínicio da tabela até a entrada <code>(- n 2)</code>.</p>
+<p>Por causa de situações como estas, implementações sérias de Scheme provêm formas de utilizar estruturas de dados mais eficientes projetadas em outras linguagens.
+Em Guile, por exemplo, poderíamos utilizar uma <em>hashtable</em> para chegar o mais próximo possível de calcular um dado número de Fibonacci em tempo constante (supondo que já tenha sido pré-computado).</p>
+<pre><code class="language-scheme">;; GUILE
+(define make-table make-hash-table)
+(define lookup hash-ref)
+(define insert! hash-set!)
+</code></pre>
+<h2><a class="header" href="#objetos-dinâmicos" id="objetos-dinâmicos">Objetos Dinâmicos</a></h2>
+<p>No exemplo anterior utilizamos uma lista cujo estado interno era acessado e alterado através de funções auxiliares: os processos são totalmente <strong>orientados aos dados</strong> manipulados.</p>
+<p>A abordagem <strong>orientada a objetos</strong> em Scheme envolve a utilização de <em>closures</em> que têm acesso ao seu próprio estado e fornecem interfaces para interagir com o ambiente externo.</p>
+<pre><code class="language-scheme">(define (make-wrapper)
+  (let ((x 'void))
+    (define (setter! y)
+      (set! x y)
+      'ok)
+    (define (self method)
+      (cond ((eq? method 'get) x)
+            ((eq? method 'set) setter!)
+            (else (error &quot;Undefined operation&quot; method))))
+    self))
+
+(define (get-value w)
+  (w 'get))
+
+(define (set-value! w x)
+  ((w 'set) x))
+</code></pre>
+<p>Nesse exemplo, ao passar a mensagem <code>'set</code> a um objeto criado por <code>make-wrapper</code> o mesmo retorna um procedimento que alterará seu estado interno quando chamado.</p>
+<p>Assim, podemos formar sistemas como conjuntos de objetos intercomunicantes.
+Note que agora o fluxo de dados não têm sentido único, podendo se propagar de qualquer forma em uma rede de objetos conectados arbitrariamente.</p>
+<p>Uma aplicação desse tipo de sistema é encontrada em equações algébricas.
+Por exemplo, a equação \( F = \frac{9}{5} * C + 32 \) determina a relação entre temperaturas das escalas Celsius e Fahrenheit.</p>
+<pre><code class="language-scheme">(define (c2f x)
+  (+ (* (/ 9 5) x) 32))
+</code></pre>
+<p>Esse procedimento representa apenas um sentido da igualdade, visto que não permite calcular a temperatura em Celsius dado uma em Fahrenheit.
+O mesmo se aplicaria se fossêmos representar a relação da lei de Ohm.</p>
+<p>\[ I = \frac{V}{R}  \Leftrightarrow  V = R * I  \Leftrightarrow  R = \frac{V}{I} \]</p>
+<p>A mesma deve valer para quaisquer valores de corrente, resistência e tensão, onde uma alteração de um lado da igualdade será propagada pela equação e causará uma mudança no lado oposto.
+Portanto, visamos modelar equações algébricas através de um <a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.5">sistema de propagação de restrições</a>.
+Para isso, vamo inserir em Scheme uma linguagem que trata de conectores e operadores.</p>
+<pre><code class="language-scheme">(define (make-connector)
+  (let ((value #f)
+        (informant #f)
+        (constraints '()))
+    (define (set-my-value newval source)
+      (cond ((not (has-value? self))
+             (set! value newval)
+             (set! informant source)
+             (for-each-except source
+                              inform-about-value
+                              constraints))
+            ((not (= value newval))
+             (error &quot;Contradiction&quot; (list value newval)))
+            (else 'ignored)))
+    (define (forget-my-value retractor)
+      (if (eq? retractor informant)
+          (begin
+            (set! informant #f)
+            (for-each-except retractor
+                             inform-about-no-value
+                             constraints))
+          'ignored))
+    (define (connect new-constraint)
+      (if (not (memq new-constraint constraints))
+          (set! constraints
+                (cons new-constraint constraints)))
+      (if (has-value? self)
+          (inform-about-value new-constraint))
+      'done)
+    (define (self request)
+      (cond ((eq? request 'has-value?) informant)
+            ((eq? request 'value) value)
+            ((eq? request 'set-value!) set-my-value)
+            ((eq? request 'forget) forget-my-value)
+            ((eq? request 'connect) connect)
+            (else (error &quot;Unknown request -- CONNECTOR&quot; request))))
+    self))
+
+(define (for-each-except exception procedure list)
+  (let loop ((items list))
+    (cond ((null? items) 'done)
+          ((eq? (car items) exception) (loop (cdr items)))
+          (else
+           (procedure (car items))
+           (loop (cdr items))))))
+
+(define (has-value? connector)
+  (if (connector 'has-value?) #t #f))
+(define (get-value connector)
+  (connector 'value))
+(define (set-value! connector new-value informant)
+  ((connector 'set-value!) new-value informant))
+(define (forget-value! connector retractor)
+  ((connector 'forget) retractor))
+(define (connect connector new-constraint)
+  ((connector 'connect) new-constraint))
+
+(define (inform-about-value constraint)
+  (constraint 'I-have-a-value))
+(define (inform-about-no-value constraint)
+  (constraint 'I-lost-my-value))
+
+(define (constant value connector)
+  (define (self request)
+    (error &quot;Unknown request -- CONSTANT&quot; request))
+  (connect connector self)
+  (set-value! connector value self)
+  self)
+
+(define (adder a1 a2 sum)
+  (define (process-new-value)
+    (cond ((and (has-value? a1) (has-value? a2))
+           (set-value! sum
+                       (+ (get-value a1) (get-value a2))
+                       self))
+          ((and (has-value? a1) (has-value? sum))
+           (set-value! a2
+                       (- (get-value sum) (get-value a1))
+                       self))
+          ((and (has-value? a2) (has-value? sum))
+           (set-value! a1
+                       (- (get-value sum) (get-value a2))
+                       self))))
+  (define (process-forget-value)
+    (forget-value! sum self)
+    (forget-value! a1 self)
+    (forget-value! a2 self)
+    (process-new-value))
+  (define (self request)
+    (cond ((eq? request 'I-have-a-value) (process-new-value))
+          ((eq? request 'I-lost-my-value) (process-forget-value))
+          (else (error &quot;Unknown request -- ADDER&quot; request))))
+  (connect a1 self)
+  (connect a2 self)
+  (connect sum self)
+  self)
+
+(define (multiplier m1 m2 product)
+  (define (process-new-value)
+    (cond ((or (and (has-value? m1) (= (get-value m1) 0))
+               (and (has-value? m2) (= (get-value m2) 0)))
+           (set-value! product 0 self))
+          ((and (has-value? m1) (has-value? m2))
+           (set-value! product
+                       (* (get-value m1) (get-value m2))
+                       self))
+          ((and (has-value? product) (has-value? m1))
+           (set-value! m2
+                       (/ (get-value product) (get-value m1))
+                       self))
+          ((and (has-value? product) (has-value? m2))
+           (set-value! m1
+                       (/ (get-value product) (get-value m2))
+                       self))))
+  (define (process-forget-value)
+    (forget-value! product self)
+    (forget-value! m1 self)
+    (forget-value! m2 self)
+    (process-new-value))
+  (define (self request)
+    (cond ((eq? request 'I-have-a-value) (process-new-value))
+          ((eq? request 'I-lost-my-value) (process-forget-value))
+          (else (error &quot;Unknown request -- MULTIPLIER&quot; request))))
+  (connect m1 self)
+  (connect m2 self)
+  (connect product self)
+  self)
+
+(define (probe name connector)
+  (define (print-probe value)
+    (display name)
+    (display &quot; = &quot;)
+    (display value)
+    (newline))
+  (define (process-new-value)
+    (print-probe (get-value connector)))
+  (define (process-forget-value)
+    (print-probe &quot;?&quot;))
+  (define (self request)
+    (cond ((eq? request 'I-have-a-value) (process-new-value))
+          ((eq? request 'I-lost-my-value) (process-forget-value))
+          (else (error &quot;Unknown request -- PROBE&quot; request))))
+  (connect connector self)
+  self)
+
+(define (c+ x y)
+  (let ((z (make-connector)))
+    (adder x y z)
+    z))
+
+(define (c* x y)
+  (let ((z (make-connector)))
+    (multiplier x y z)
+    z))
+
+(define (cv val)
+  (let ((c (make-connector)))
+    (constant val c)
+    c))
+
+(define (c- x y)
+  (let ((z (make-connector)))
+    (adder z y x)
+    z))
+
+(define (c/ x y)
+  (let ((z (make-connector)))
+    (multiplier z y x)
+    z))
+</code></pre>
+<p>Finalmente, para utilizar o sistema:</p>
+<pre><code class="language-scheme">(define (celsius-fahrenheit-converter x)
+  (c+ (c* (c/ (cv 9) (cv 5)) x) (cv 32)))
+
+(define c (make-connector))
+(probe &quot;Celsius&quot; c)
+
+(define f (celsius-fahrenheit-converter c))
+(probe &quot;Fahrenheit&quot; f)
+
+(set-value! c 100 'user)
+
+
+(define (ohms-law v r) (c/ v r))
+
+(define v (make-connector))
+(probe &quot;Voltage&quot; v)
+
+(define r (make-connector))
+(probe &quot;Resistance&quot; r)
+
+(define i (ohms-law v r))
+(probe &quot;Current&quot; i)
+</code></pre>
+<h2><a class="header" href="#lazy-streams-no-infinito" id="lazy-streams-no-infinito"><em>Lazy Streams</em> no Infinito</a></h2>
+<p>Tendo observado outros tipos de sistemas, voltemos aos unidirecionais com o intuito de explorar esse paradigma de fluxo de dados: se um programa consiste no encadeamento de funções puras, não importa o momento em que um valor intermediário é computado, desde que quando o resultado final seja requisitado ele se faça presente.
+Sistemas assim podem se dar ao luxo de serem &quot;preguiçosos&quot;, adiando ao máximo o instante em que realizarão uma computação.</p>
+<blockquote>
+<p>Computadores, assim como pessoas, tentam adiar ao máximo possível a ocorrência de eventos desagradáveis.
+(<a href="https://en.wikipedia.org/wiki/Modern_Operating_Systems">Tanenbaum, 2011</a>)</p>
+</blockquote>
+<p>A seguir implementaremos um tipo de lista que segue essa ideia de <a href="https://en.wikipedia.org/wiki/Lazy_evaluation"><em>lazy evaluation</em></a>.
+Os principais procedimentos pelos quais essas &quot;listas preguiçosas&quot; serão manipuladas estão descritos abaixo.</p>
+<pre><code class="language-scheme">(define (stream-ref seq n)
+  (cond ((empty? seq) #f)
+        ((&lt;= n 0) (head seq))
+        (else (stream-ref (tail seq) (- n 1)))))
+
+(define (stream-for-each proc seq)
+  (if (not (empty? seq))
+      (begin
+        (proc (head seq))
+        (stream-for-each proc (tail seq)))))
+
+(define (stream-map proc seq)
+  (if (empty? seq) empty-stream
+      (stream (proc (head seq))
+              (stream-map proc (tail seq)))))
+
+(define (stream-filter pred seq)
+  (cond ((empty? seq) empty-stream)
+        ((pred (head seq)) (stream (head seq)
+                                   (stream-filter pred (tail seq))))
+        (else (stream-filter pred (tail seq)))))
+
+(define (stream-foldr op acc seq) ;; aka reduce
+  (if (empty? seq) acc
+      (op (head seq)
+          (stream-foldr op acc (tail seq)))))
+
+(define (stream-zip-with op sa sb)
+  (stream (op (head sa) (head sb))
+          (stream-zip-with op (tail sa) (tail sb))))
+</code></pre>
+<blockquote>
+<p>Construa um procedimento <code>(stream-range lo hi)</code> que gera uma stream com todos os inteiros entre <code>lo</code> e <code>hi</code>.</p>
+</blockquote>
+<p>As primitivas que constroem e acessam as <em>streams</em> são responsáveis por diferenciá-las de listas normais.</p>
+<pre><code class="language-scheme">(define (memo-proc proc)
+  (let ((run? #f)
+        (cached '()))
+    (lambda ()
+      (if run? cached
+          (let ((result (proc)))
+            (begin
+              (set! run? #t)
+              (set! cached result)
+              result))))))
+
+;; delay
+(define-syntax lazy
+  (syntax-rules ()
+    ((lazy expr)
+      (memo-proc (lambda () expr)))))
+
+;; force
+(define (thunk p) (p))
+
+(define-syntax stream
+  (syntax-rules ()
+    ((stream x y)
+      (cons x (lazy y)))))
+
+(define (head s) (car s))
+(define (tail s) (thunk (cdr s)))
+(define (empty? s) (null? s))
+(define empty-stream '())
+</code></pre>
+<p>As <a href="http://ds26gte.github.io/tyscheme/index-Z-H-10.html">macros</a> <code>stream</code> e <code>lazy</code> definem transformações que ocorrem no código antes da sua interpretação.
+Assim, uma <em>stream</em> consiste num par onde a computação do segundo elemento foi postergada, deixando apenas uma promessa de que estará lá quando for necessária.
+Se um elemento de uma <em>stream</em> nunca for acessado, a promessa não precisa ser cumprida e nenhum processamento é efetuado.</p>
+<p>Note que esse mecanismo permite representar sequências infinitas: todos os elementos estarão presentes, mas só existirão de fato quando alguém requisitar.</p>
+<pre><code class="language-scheme">(define (ints-from n)
+  (stream n (ints-from (+ n 1))))
+
+(define (sieve seq) ;; crivo de Eratostenes
+  (define (divisible? a b)
+    (= 0 (remainder a b)))
+  (if (empty? seq) seq
+      (stream (head seq)
+              (sieve (stream-filter (lambda (x) (not (divisible? x (head seq))))
+                                    (tail seq))))))
+
+(define primes (sieve (ints-from 2)))
+</code></pre>
+<p>Podemos afirmar, portanto, que <code>primes</code> é a <em>stream</em> de todos os números primos.</p>
+<p>O esquema pode ser aplicado também para séries infinitas, por exemplo na <a href="https://en.wikipedia.org/wiki/Taylor_series">série de Taylor-Maclaurin</a> para o arco tangente</p>
+<p>\[ \arctan x = x - \frac{x^3}{3} + \frac{x^5}{5} - \frac{x^7}{7} + ... \]</p>
+<pre><code class="language-scheme">(define (arctan-series x n)
+  (stream (/ (expt x n) n)
+          (stream-map - (arctan-series x (+ n 2)))))
+</code></pre>
+<blockquote>
+<p>Podemos substituir x=1 para poder encontrar a <a href="https://en.wikipedia.org/wiki/Madhava_series">fórmula de Madhava</a> para aproximar o valor de \( \pi \):</p>
+<p>\[ \arctan 1 = \frac{\pi}{4} = 1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + ... \]</p>
+<p>Tente gerar uma <em>stream</em> contendo as aproximações de pi pela fórmula anterior, onde cada n-ésimo elemento equivale à soma parcial de n termos da série.</p>
+</blockquote>
+<pre><code class="language-scheme">(define (partial-sums s)
+  (stream-zip-with + s (stream 0 (partial-sums s))))
+
+(define pi-approximations
+  (stream-map (lambda (pi/4) (* 4 pi/4))
+              (partial-sums (arctan-series 1.0 1))))
+</code></pre>
+<blockquote>
+<p>Por fim, vamos obter a sequência de Fibonacci completa em uma <em>stream</em> infinita.</p>
+</blockquote>
+<pre><code class="language-scheme">(define (fibonacci-sequence prev curr)
+  (stream prev
+          (fibonacci-sequence curr (+ prev curr))))
+
+(define fibs (fibonacci-sequence 0 1))
+</code></pre>
+<blockquote>
+<p>Reflita sobre a possibilidade de computar elementos de uma <em>lazy stream</em> paralelamente com técnicas de programação concorrente.
+Você pode discutir suas ideias na <a href="./discussion.html">seção de comentários</a> desse site.</p>
+</blockquote>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="diff.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="memo.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="diff.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="memo.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

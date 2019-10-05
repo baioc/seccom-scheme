@@ -1,0 +1,2609 @@
+<!DOCTYPE HTML>
+<html lang="pt-BR" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>((Functional (Scheme)) Maths)</title>
+        
+        <meta name="robots" content="noindex" />
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Oficina de Matemática Funcional em Scheme da SECCOM UFSC 2019">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
+    </head>
+    <body class="navy">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = "navy";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="about.html"><strong aria-hidden="true">1.</strong> Sobre a Oficina</a></li><li><ol class="section"><li><a href="bib.html"><strong aria-hidden="true">1.1.</strong> Bibliografia</a></li></ol></li><li><a href="intro.html"><strong aria-hidden="true">2.</strong> Computando com Scheme</a></li><li><ol class="section"><li><a href="lang.html"><strong aria-hidden="true">2.1.</strong> Sobre Linguagens</a></li><li><a href="eg.html"><strong aria-hidden="true">2.2.</strong> Introdução à Scheme</a></li></ol></li><li><a href="recursion.html"><strong aria-hidden="true">3.</strong> Repetição via Recursão</a></li><li><ol class="section"><li><a href="rec.html"><strong aria-hidden="true">3.1.</strong> Recursão Linear</a></li><li><a href="iter.html"><strong aria-hidden="true">3.2.</strong> Tail-Recursion</a></li><li><a href="lin.html"><strong aria-hidden="true">3.3.</strong> Linearização</a></li></ol></li><li><a href="functional.html"><strong aria-hidden="true">4.</strong> Abstração Funcional</a></li><li><ol class="section"><li><a href="pow.html"><strong aria-hidden="true">4.1.</strong> Potenciação Rápida</a></li><li><a href="fix.html"><strong aria-hidden="true">4.2.</strong> Pontos Fixos</a></li></ol></li><li><a href="meta.html"><strong aria-hidden="true">5.</strong> Abstração Metalinguística</a></li><li><ol class="section"><li><a href="sym.html"><strong aria-hidden="true">5.1.</strong> Processamento Simbólico</a></li><li><a href="diff.html"><strong aria-hidden="true">5.2.</strong> Diferenciação Analítica</a></li></ol></li><li><a href="systems.html"><strong aria-hidden="true">6.</strong> Sistemas Computacionais</a></li><li><ol class="section"><li><a href="memo.html"><strong aria-hidden="true">6.1.</strong> Memoization com Closures</a></li><li><a href="constr.html"><strong aria-hidden="true">6.2.</strong> Objetos Dinâmicos</a></li><li><a href="inf.html"><strong aria-hidden="true">6.3.</strong> Lazy Streams no Infinito</a></li></ol></li><li><a href="discussion.html"><strong aria-hidden="true">7.</strong> Finale</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">((Functional (Scheme)) Maths)</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#matemática-funcional-em-scheme" id="matemática-funcional-em-scheme">Matemática Funcional em Scheme</a></h1>
+<h2><a class="header" href="#cronograma" id="cronograma">Cronograma</a></h2>
+<blockquote>
+<ul>
+<li>1º Dia: <strong>02 de Outubro, Quarta-feira</strong> <br/>
+Horário: <strong>10h10 às 12h00</strong> <br/>
+Local: INE sala <strong>INE314</strong></li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>2º Dia: <strong>03 de Outubro, Quinta-feira</strong> <br/>
+Horário: <strong>10h10 às 12h00</strong> <br/>
+Local: CTC sala <strong>LIICT9</strong></li>
+</ul>
+</blockquote>
+<h2><a class="header" href="#como-participar" id="como-participar">Como participar</a></h2>
+<p>Confira as datas e horários das <a href="https://seccom-ufsc.github.io/2019/#Oficinas">oficinas da SECCOM</a>. <br/>
+Faça a sua <a href="https://docs.google.com/forms/d/e/1FAIpQLScaSQj9MBJJsgE77ef11SWf10cuyUUajxt0GeZkRkNghr4JZQ/viewform"><strong>inscrição</strong></a>.</p>
+<h2><a class="header" href="#resumo" id="resumo">Resumo</a></h2>
+<p>Scheme é um dos principais &quot;dialetos&quot; de <a href="https://en.wikipedia.org/wiki/Lisp_programming_language">Lisp</a>, que adere ao paradigma funcional e é a <strong>segunda linguagem de programação mais antiga ainda amplamente utilizada</strong>.
+Devido à sua flexibilidade e simplicidade, Scheme é usada para extender e customizar o comportamento de outros softwares e foi adotada como <a href="https://www.gnu.org/software/guile/">a linguagem de scripting oficial do GNU Project</a>.</p>
+<h2><a class="header" href="#conteúdos-explorados" id="conteúdos-explorados">Conteúdos explorados</a></h2>
+<p>O oficina abordará algumas <strong>técnicas de programação funcional</strong> em Scheme para algoritmos matemáticos e métodos numéricos, incluindo:</p>
+<ul>
+<li><strong>Tipos de recursão e <em>tail call optimization</em></strong></li>
+<li><strong>Abstração com funções de alta ordem e <em>closures</em></strong></li>
+<li><strong>Paradigma de fluxo de dados (<em>streams</em>): ao infinito e além com <em>lazy evaluation</em></strong></li>
+<li><strong>Processamento simbólico e metalinguagem</strong></li>
+</ul>
+<p>É necessário conhecimento prévio de programação, não necessariamente do paradigma funcional.
+Noções de Matemática Discreta e Cálculo Numérico são recomendadas mas não obrigatórias.</p>
+<h2><a class="header" href="#ferramentas-utilizadas" id="ferramentas-utilizadas">Ferramentas utilizadas</a></h2>
+<p><a href="https://cisco.github.io/ChezScheme/">Chez Scheme</a> (preferência pessoal), <a href="https://www.gnu.org/software/guile/">GNU Guile</a> (disponível na ISO do PET Computação) ou a sua <a href="https://en.wikipedia.org/wiki/Category:Scheme_(programming_language)_implementations">implementação</a> favorita de Scheme.</p>
+<h2><a class="header" href="#bibliografia" id="bibliografia">Bibliografia</a></h2>
+<p><img src="http://groups.csail.mit.edu/mac/classes/6.001/abelson-sussman-lectures/wizard.jpg" alt="The Wizard Book" /></p>
+<ul>
+<li>
+<p><a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book.html"><strong>Structure and Interpretation of Computer Programs <br/> (SICP, a.k.a. &quot;The Wizard Book&quot;)</strong> <br/> - Abelson H., Sussman G. J.</a></p>
+</li>
+<li>
+<p><a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/"><strong>MIT OpenCourseWare 6.001 SICP lectures</strong> <br/> - Abelson H., Sussman G. J.</a></p>
+</li>
+<li>
+<p><a href="https://www.scheme.com/tspl4/"><strong>The Scheme Programming Language</strong> <br/> - Dybvig R. K.</a></p>
+</li>
+<li>
+<p><a href="https://ds26gte.github.io/tyscheme/"><strong>Teach Yourself Scheme in Fixnum Days</strong> <br/> - Sitaram D.</a></p>
+</li>
+<li>
+<p><a href="https://htdp.org/2019-02-24/"><strong>How to Design Programs</strong> <br/> - Felleisen M., Findler R. B., Flatt M., Krishnamurthi S.</a></p>
+</li>
+</ul>
+<h2><a class="header" href="#bibliografia-1" id="bibliografia-1">Bibliografia</a></h2>
+<p><img src="http://groups.csail.mit.edu/mac/classes/6.001/abelson-sussman-lectures/wizard.jpg" alt="The Wizard Book" /></p>
+<ul>
+<li>
+<p><a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book.html"><strong>Structure and Interpretation of Computer Programs <br/> (SICP, a.k.a. &quot;The Wizard Book&quot;)</strong> <br/> - Abelson H., Sussman G. J.</a></p>
+</li>
+<li>
+<p><a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/"><strong>MIT OpenCourseWare 6.001 SICP lectures</strong> <br/> - Abelson H., Sussman G. J.</a></p>
+</li>
+<li>
+<p><a href="https://www.scheme.com/tspl4/"><strong>The Scheme Programming Language</strong> <br/> - Dybvig R. K.</a></p>
+</li>
+<li>
+<p><a href="https://ds26gte.github.io/tyscheme/"><strong>Teach Yourself Scheme in Fixnum Days</strong> <br/> - Sitaram D.</a></p>
+</li>
+<li>
+<p><a href="https://htdp.org/2019-02-24/"><strong>How to Design Programs</strong> <br/> - Felleisen M., Findler R. B., Flatt M., Krishnamurthi S.</a></p>
+</li>
+</ul>
+<h1><a class="header" href="#computando-com-scheme" id="computando-com-scheme">Computando com Scheme</a></h1>
+<h2><a class="header" href="#sobre-linguagens" id="sobre-linguagens">Sobre Linguagens</a></h2>
+<blockquote>
+<p>Qualquer notação usada para dar instruções pode ser considerada uma linguagem de programação (<a href="https://www.cs.colorado.edu/%7Ebec/courses/csci5535/reading/densem.pdf">Schmidt</a>).</p>
+</blockquote>
+<p>Talvez pela familiaridade com a área e a base formal já existente, a maioria das linguagens de programação de uso geral (incluindo Scheme) se baseia em computar funções matemáticas através de expressões.
+O mecanismo principal se baseia na &quot;coincidência&quot; de que a <strong>expressão</strong> que descreve o <strong>valor</strong> de uma função pode ser <strong>interpretada</strong> como um <strong>procedimento</strong> para <strong>computar</strong> aquele valor (<a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-29.html">Abelson e Sussman, 1968</a>).</p>
+<p>Por exemplo, tendo uma função polinomial expressa em &quot;matematiquês&quot;:</p>
+<p>\[ x^2 - x - 1 \]</p>
+<p>Podemos expressá-la com caracteres padrão em alguma linguagem (por acaso a notação abaixo é código válido de Octave, provavelmente o sendo em mais uma série de outras linguagens):</p>
+<pre><code class="language-m">x ^ 2 - x - 1
+</code></pre>
+<p>Um polinômio equivalente na <a href="https://en.wikipedia.org/wiki/Polish_notation">notação pré-fixada</a> de Lisp seria</p>
+<pre><code class="language-scheme">(+ (^ x 2) (- x) -1)
+</code></pre>
+<h3><a class="header" href="#sintaxe-e-semântica" id="sintaxe-e-semântica">Sintaxe e Semântica</a></h3>
+<blockquote>
+<p>Programas devem ser escritos para que pessoas possam os ler, e apenas incidentalmente para que máquinas os executem (<a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-7.html">Abelson e Sussman, 1968</a>).</p>
+</blockquote>
+<p>A notação das expressões de uma linguagem específica é dita a sua sintaxe; e mesmo que esse tópico não nos interesse no escopo deste minicurso, começamos falando sobre sintaxe pois apenas expressões sintaticamente corretas possuem semântica, ou seja, significado, associado a elas.</p>
+<p>Mais importante ainda, falamos da sintaxe de Scheme para destacar seu minimalismo: ela é composta essencialmente pelas chamadas <strong>expressões simbólicas</strong> (<a href="https://en.wikipedia.org/wiki/S-expression"><em>sexprs</em></a>), cada uma delas caracterizando uma árvore binária, podendo ser:</p>
+<ol>
+<li>Um átomo; ou</li>
+<li>Uma expressão na forma <code>(head . tail)</code> onde <code>head</code> e <code>tail</code> são <em>sexprs</em>.</li>
+</ol>
+<h3><a class="header" href="#pragmática" id="pragmática">Pragmática</a></h3>
+<p>Aos prospectivos utilizadores de uma linguagem de programação interessa mais um outro elemento: a <strong>pragmática</strong>, ou seja, os aspectos práticos da linguagem que a tornam útil para alcançar um conjunto de possíveis objetivos (<a href="https://www2.cs.sfu.ca/%7Ecameron/Teaching/383/syn-sem-prag-meta.html">Cameron</a>).</p>
+<p>Neste minicurso será dado enfoque especial à aplicações matemáticas de Scheme como linguagem de programação funcional, onde a principal forma de <strong>abstração</strong> é encontrada na manipulação de funções.</p>
+<h3><a class="header" href="#metalinguagem" id="metalinguagem">Metalinguagem</a></h3>
+<p>Por último, mas não menos importante, temos a ferramenta com a qual falamos sobre uma linguagem, descrevemos suas características e discutimos suas aplicações: a <strong>metalinguagem</strong> que lhe cabe.</p>
+<p>Mais adiante veremos que é possível empregar Scheme como uma linguagem de programação de uso geral que não é especialmente adequada a resolver nenhuma classe de problemas; em vez disso, seu maior potencial está na capacidade de construir e embarcar em si mesma a linguagem mais apta para fazê-lo através de abstrações metalinguísticas (<a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-25.html">Abelson e Sussman</a>).</p>
+<h2><a class="header" href="#introdução-à-scheme" id="introdução-à-scheme">Introdução à Scheme</a></h2>
+<h3><a class="header" href="#programas" id="programas">Programas</a></h3>
+<blockquote>
+<p>Os atos pelos quais a mente exerce seu poder sobre as idéias são principalmente três:
+(1) Combinando várias idéias simples em uma composta e originando assim todas as idéias complexas;
+(2) Reunindo duas idéias, simples ou complexas, a fim de ter uma visão delas, sem, contudo, unificá-las numa, obtendo por este meio todas as suas noções das relações;
+(3) Separando-as de todas as outras idéias que lhes integram, no processo chamado abstração: deste modo a mente forma todas as suas idéias gerais.
+(<a href="https://oll.libertyfund.org/titles/locke-the-works-vol-1-an-essay-concerning-human-understanding-part-1">Locke, 1689</a>)</p>
+</blockquote>
+<p>Toda a linguagem de programação que se preze possui três mecanismos básicos com os quais expressa programas:</p>
+<ol>
+<li><strong>Entidades primitivas</strong>: os objetos mais simples dos quais fala a linguagem.</li>
+<li><strong>Meios de combinação</strong>: a construção de elementos compostos através de outros mais simples.</li>
+<li><strong>Meios de abstração</strong>: pelos quais manipulamos elementos independentemente da sua complexidade.</li>
+</ol>
+<p>(<a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html">Abelson e Sussman</a>).</p>
+<h3><a class="header" href="#interpretação" id="interpretação">Interpretação</a></h3>
+<p>Para testar os exemplos nas subseções a seguir, utilize alguma implementação de Scheme:</p>
+<ul>
+<li><a href="https://cisco.github.io/ChezScheme/">Chez</a> - <strong>Ótimo REPL</strong>, possui um dos interpretadores mais rápidos e uma versão adicional minimalista para distribuição de programas interpretados.</li>
+<li><a href="http://www-sop.inria.fr/mimosa/fp/Bigloo/">Bigloo</a> - Um exemplo de <strong>transpilador Scheme-&gt;C</strong> que permite gerar binários executáveis e altamente portáveis.</li>
+<li><a href="https://www.gnu.org/software/guile/">Guile</a> - É a <strong>linguagem de scripting oficial do GNU Project</strong>, sendo utilizada como linguagem de extensão e configuração do <a href="https://guix.gnu.org/">sistema operacional funcional GuixSD</a>.</li>
+<li><a href="https://racket-lang.org/">Racket</a> - Tem uma <strong>IDE feita para Scheme, o Dr. Racket</strong>; oferecendo, além da linguagem padrão, mais um grande conjunto de &quot;dialetos&quot;.</li>
+<li><a href="https://ecraven.github.io/r7rs-benchmarks/">Outros</a> - Procure implementações com comunidade ativa e que se adequem aos padrões <a href="https://en.wikipedia.org/wiki/Scheme_(programming_language)#Review_of_standard_forms_and_procedures"><em>Revised^n Report on the Algorithmic Language Scheme</em> (RnRS)</a>. Se você deseja alguma <em>feature</em> específica, confira se a sua implementação já a oferece através de algum <a href="https://srfi.schemers.org/"><em>Scheme Request For Implementation</em> (SRFI)</a>.</li>
+</ul>
+<p>Saiba consultar a <a href="https://docs.racket-lang.org/">documentação</a> da sua implementação. <br/>
+Na dúvida, <a href="https://scheme.com/tspl4/">Dybvig</a> e <a href="https://ds26gte.github.io/tyscheme/">Sitaram</a> podem ajudar.</p>
+<h3><a class="header" href="#estrutura-a-hrefhttpsdocsracket-langorgracket-cheatindexhtmlexemplosa" id="estrutura-a-hrefhttpsdocsracket-langorgracket-cheatindexhtmlexemplosa">Estrutura (<a href="https://docs.racket-lang.org/racket-cheat/index.html">exemplos</a>)</a></h3>
+<h4><a class="header" href="#primitivas" id="primitivas">Primitivas</a></h4>
+<p>Alguns exemplos de entidades primitivas em Scheme:</p>
+<pre><code class="language-scheme">; numeros
+42
+0.03
+12e-4
+67+89i
+12/40
+
+; booleanos
+#t
+#f
+
+; funcoes primitivas
++
+-
+odd?
+even?
+car
+cdr
+
+; simbolos
+'a
+'λ
+'scheme
+
+; caracteres
+#\c
+#\f
+</code></pre>
+<h4><a class="header" href="#combinações" id="combinações">Combinações</a></h4>
+<p>Vejamos os meios de combinação presentes em Scheme:</p>
+<pre><code class="language-scheme">; pares
+(cons 'head 'tail)
+(car (cons 1 2))
+(cdr (cons 1 2))
+
+; listas
+'()
+(list 1 2 3)
+(cdr '(a b c))
+
+; funcoes anonimas
+(lambda (x) x)
+(lambda (a b) (+ a b))
+
+; strings
+&quot;Hello, Scheme World!&quot;
+
+; vetores
+#(1 2 3)
+</code></pre>
+<h5><a class="header" href="#dados-vs-código" id="dados-vs-código">Dados <em>vs</em> Código</a></h5>
+<p>Listas são encadeamentos de pares (como uma corrente) terminadas em <code>'()</code>.
+Assim, os dados processados em Scheme possuem exatamente a mesma forma que seu código.
+Essa propriedade se chama <a href="https://en.wikipedia.org/wiki/Homoiconicity"><strong>Homoiconicidade</strong></a>.</p>
+<h4><a class="header" href="#abstrações" id="abstrações">Abstrações</a></h4>
+<p>São alguns meios de abstração de Scheme:</p>
+<pre><code class="language-scheme">; nomes temporarios
+(let ((x 7)
+      (y 8))
+  (+ x y))
+
+(let* ((a 2)
+       (b (+ a 1))
+       (c (* a b)))
+  (+ a b c))
+
+; definicoes
+(define x 5)
+
+(define (identity x) x)
+
+(define list
+  (lambda (first . rest) (cons first rest)))
+
+(define (foo x)
+  (define (even? n)
+    (display &quot;even? &quot;) (display n) (newline)
+    (if (= n 0)
+        #t
+        (odd? (- n 1))))
+
+  (define (odd? n)
+    (display &quot;odd? &quot;) (display n) (newline)
+    (if (= n 0)
+        #f
+        (even? (- n 1))))
+
+  (cond ((even? x) &quot;EVEN&quot;)
+        ((odd? x) &quot;ODD&quot;)
+        (else &quot;????&quot;)))
+
+; mix
+(let 2^ ((n 10)
+         (acc 1))
+  (if (= n 0) acc
+      (2^ (- n 1) (* acc 2))))
+
+(let ((a 1))
+  (define (foo x)
+    (define b (+ a x))
+    (define a 5)
+    (+ a b))
+  (display (foo 10)) (newline)
+  a)
+</code></pre>
+<blockquote>
+<p>Sim, <code>foo</code> tem vários problemas.
+Tente corrigi-los.</p>
+<p>Procure escrever em Scheme a definição de um procedimento que calcula em um ponto <code>x</code> o valor do polinômio \( x^2 - x -1 \).</p>
+<p>Em seguida, implemente um procedimento <code>(list-ref lst n)</code> que retorna o n-ésimo elemento de uma lista.</p>
+</blockquote>
+<h2><a class="header" href="#sobre-linguagens-1" id="sobre-linguagens-1">Sobre Linguagens</a></h2>
+<blockquote>
+<p>Qualquer notação usada para dar instruções pode ser considerada uma linguagem de programação (<a href="https://www.cs.colorado.edu/%7Ebec/courses/csci5535/reading/densem.pdf">Schmidt</a>).</p>
+</blockquote>
+<p>Talvez pela familiaridade com a área e a base formal já existente, a maioria das linguagens de programação de uso geral (incluindo Scheme) se baseia em computar funções matemáticas através de expressões.
+O mecanismo principal se baseia na &quot;coincidência&quot; de que a <strong>expressão</strong> que descreve o <strong>valor</strong> de uma função pode ser <strong>interpretada</strong> como um <strong>procedimento</strong> para <strong>computar</strong> aquele valor (<a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-29.html">Abelson e Sussman, 1968</a>).</p>
+<p>Por exemplo, tendo uma função polinomial expressa em &quot;matematiquês&quot;:</p>
+<p>\[ x^2 - x - 1 \]</p>
+<p>Podemos expressá-la com caracteres padrão em alguma linguagem (por acaso a notação abaixo é código válido de Octave, provavelmente o sendo em mais uma série de outras linguagens):</p>
+<pre><code class="language-m">x ^ 2 - x - 1
+</code></pre>
+<p>Um polinômio equivalente na <a href="https://en.wikipedia.org/wiki/Polish_notation">notação pré-fixada</a> de Lisp seria</p>
+<pre><code class="language-scheme">(+ (^ x 2) (- x) -1)
+</code></pre>
+<h3><a class="header" href="#sintaxe-e-semântica-1" id="sintaxe-e-semântica-1">Sintaxe e Semântica</a></h3>
+<blockquote>
+<p>Programas devem ser escritos para que pessoas possam os ler, e apenas incidentalmente para que máquinas os executem (<a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-7.html">Abelson e Sussman, 1968</a>).</p>
+</blockquote>
+<p>A notação das expressões de uma linguagem específica é dita a sua sintaxe; e mesmo que esse tópico não nos interesse no escopo deste minicurso, começamos falando sobre sintaxe pois apenas expressões sintaticamente corretas possuem semântica, ou seja, significado, associado a elas.</p>
+<p>Mais importante ainda, falamos da sintaxe de Scheme para destacar seu minimalismo: ela é composta essencialmente pelas chamadas <strong>expressões simbólicas</strong> (<a href="https://en.wikipedia.org/wiki/S-expression"><em>sexprs</em></a>), cada uma delas caracterizando uma árvore binária, podendo ser:</p>
+<ol>
+<li>Um átomo; ou</li>
+<li>Uma expressão na forma <code>(head . tail)</code> onde <code>head</code> e <code>tail</code> são <em>sexprs</em>.</li>
+</ol>
+<h3><a class="header" href="#pragmática-1" id="pragmática-1">Pragmática</a></h3>
+<p>Aos prospectivos utilizadores de uma linguagem de programação interessa mais um outro elemento: a <strong>pragmática</strong>, ou seja, os aspectos práticos da linguagem que a tornam útil para alcançar um conjunto de possíveis objetivos (<a href="https://www2.cs.sfu.ca/%7Ecameron/Teaching/383/syn-sem-prag-meta.html">Cameron</a>).</p>
+<p>Neste minicurso será dado enfoque especial à aplicações matemáticas de Scheme como linguagem de programação funcional, onde a principal forma de <strong>abstração</strong> é encontrada na manipulação de funções.</p>
+<h3><a class="header" href="#metalinguagem-1" id="metalinguagem-1">Metalinguagem</a></h3>
+<p>Por último, mas não menos importante, temos a ferramenta com a qual falamos sobre uma linguagem, descrevemos suas características e discutimos suas aplicações: a <strong>metalinguagem</strong> que lhe cabe.</p>
+<p>Mais adiante veremos que é possível empregar Scheme como uma linguagem de programação de uso geral que não é especialmente adequada a resolver nenhuma classe de problemas; em vez disso, seu maior potencial está na capacidade de construir e embarcar em si mesma a linguagem mais apta para fazê-lo através de abstrações metalinguísticas (<a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-25.html">Abelson e Sussman</a>).</p>
+<h2><a class="header" href="#introdução-à-scheme-1" id="introdução-à-scheme-1">Introdução à Scheme</a></h2>
+<h3><a class="header" href="#programas-1" id="programas-1">Programas</a></h3>
+<blockquote>
+<p>Os atos pelos quais a mente exerce seu poder sobre as idéias são principalmente três:
+(1) Combinando várias idéias simples em uma composta e originando assim todas as idéias complexas;
+(2) Reunindo duas idéias, simples ou complexas, a fim de ter uma visão delas, sem, contudo, unificá-las numa, obtendo por este meio todas as suas noções das relações;
+(3) Separando-as de todas as outras idéias que lhes integram, no processo chamado abstração: deste modo a mente forma todas as suas idéias gerais.
+(<a href="https://oll.libertyfund.org/titles/locke-the-works-vol-1-an-essay-concerning-human-understanding-part-1">Locke, 1689</a>)</p>
+</blockquote>
+<p>Toda a linguagem de programação que se preze possui três mecanismos básicos com os quais expressa programas:</p>
+<ol>
+<li><strong>Entidades primitivas</strong>: os objetos mais simples dos quais fala a linguagem.</li>
+<li><strong>Meios de combinação</strong>: a construção de elementos compostos através de outros mais simples.</li>
+<li><strong>Meios de abstração</strong>: pelos quais manipulamos elementos independentemente da sua complexidade.</li>
+</ol>
+<p>(<a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html">Abelson e Sussman</a>).</p>
+<h3><a class="header" href="#interpretação-1" id="interpretação-1">Interpretação</a></h3>
+<p>Para testar os exemplos nas subseções a seguir, utilize alguma implementação de Scheme:</p>
+<ul>
+<li><a href="https://cisco.github.io/ChezScheme/">Chez</a> - <strong>Ótimo REPL</strong>, possui um dos interpretadores mais rápidos e uma versão adicional minimalista para distribuição de programas interpretados.</li>
+<li><a href="http://www-sop.inria.fr/mimosa/fp/Bigloo/">Bigloo</a> - Um exemplo de <strong>transpilador Scheme-&gt;C</strong> que permite gerar binários executáveis e altamente portáveis.</li>
+<li><a href="https://www.gnu.org/software/guile/">Guile</a> - É a <strong>linguagem de scripting oficial do GNU Project</strong>, sendo utilizada como linguagem de extensão e configuração do <a href="https://guix.gnu.org/">sistema operacional funcional GuixSD</a>.</li>
+<li><a href="https://racket-lang.org/">Racket</a> - Tem uma <strong>IDE feita para Scheme, o Dr. Racket</strong>; oferecendo, além da linguagem padrão, mais um grande conjunto de &quot;dialetos&quot;.</li>
+<li><a href="https://ecraven.github.io/r7rs-benchmarks/">Outros</a> - Procure implementações com comunidade ativa e que se adequem aos padrões <a href="https://en.wikipedia.org/wiki/Scheme_(programming_language)#Review_of_standard_forms_and_procedures"><em>Revised^n Report on the Algorithmic Language Scheme</em> (RnRS)</a>. Se você deseja alguma <em>feature</em> específica, confira se a sua implementação já a oferece através de algum <a href="https://srfi.schemers.org/"><em>Scheme Request For Implementation</em> (SRFI)</a>.</li>
+</ul>
+<p>Saiba consultar a <a href="https://docs.racket-lang.org/">documentação</a> da sua implementação. <br/>
+Na dúvida, <a href="https://scheme.com/tspl4/">Dybvig</a> e <a href="https://ds26gte.github.io/tyscheme/">Sitaram</a> podem ajudar.</p>
+<h3><a class="header" href="#estrutura-a-hrefhttpsdocsracket-langorgracket-cheatindexhtmlexemplosa-1" id="estrutura-a-hrefhttpsdocsracket-langorgracket-cheatindexhtmlexemplosa-1">Estrutura (<a href="https://docs.racket-lang.org/racket-cheat/index.html">exemplos</a>)</a></h3>
+<h4><a class="header" href="#primitivas-1" id="primitivas-1">Primitivas</a></h4>
+<p>Alguns exemplos de entidades primitivas em Scheme:</p>
+<pre><code class="language-scheme">; numeros
+42
+0.03
+12e-4
+67+89i
+12/40
+
+; booleanos
+#t
+#f
+
+; funcoes primitivas
++
+-
+odd?
+even?
+car
+cdr
+
+; simbolos
+'a
+'λ
+'scheme
+
+; caracteres
+#\c
+#\f
+</code></pre>
+<h4><a class="header" href="#combinações-1" id="combinações-1">Combinações</a></h4>
+<p>Vejamos os meios de combinação presentes em Scheme:</p>
+<pre><code class="language-scheme">; pares
+(cons 'head 'tail)
+(car (cons 1 2))
+(cdr (cons 1 2))
+
+; listas
+'()
+(list 1 2 3)
+(cdr '(a b c))
+
+; funcoes anonimas
+(lambda (x) x)
+(lambda (a b) (+ a b))
+
+; strings
+&quot;Hello, Scheme World!&quot;
+
+; vetores
+#(1 2 3)
+</code></pre>
+<h5><a class="header" href="#dados-vs-código-1" id="dados-vs-código-1">Dados <em>vs</em> Código</a></h5>
+<p>Listas são encadeamentos de pares (como uma corrente) terminadas em <code>'()</code>.
+Assim, os dados processados em Scheme possuem exatamente a mesma forma que seu código.
+Essa propriedade se chama <a href="https://en.wikipedia.org/wiki/Homoiconicity"><strong>Homoiconicidade</strong></a>.</p>
+<h4><a class="header" href="#abstrações-1" id="abstrações-1">Abstrações</a></h4>
+<p>São alguns meios de abstração de Scheme:</p>
+<pre><code class="language-scheme">; nomes temporarios
+(let ((x 7)
+      (y 8))
+  (+ x y))
+
+(let* ((a 2)
+       (b (+ a 1))
+       (c (* a b)))
+  (+ a b c))
+
+; definicoes
+(define x 5)
+
+(define (identity x) x)
+
+(define list
+  (lambda (first . rest) (cons first rest)))
+
+(define (foo x)
+  (define (even? n)
+    (display &quot;even? &quot;) (display n) (newline)
+    (if (= n 0)
+        #t
+        (odd? (- n 1))))
+
+  (define (odd? n)
+    (display &quot;odd? &quot;) (display n) (newline)
+    (if (= n 0)
+        #f
+        (even? (- n 1))))
+
+  (cond ((even? x) &quot;EVEN&quot;)
+        ((odd? x) &quot;ODD&quot;)
+        (else &quot;????&quot;)))
+
+; mix
+(let 2^ ((n 10)
+         (acc 1))
+  (if (= n 0) acc
+      (2^ (- n 1) (* acc 2))))
+
+(let ((a 1))
+  (define (foo x)
+    (define b (+ a x))
+    (define a 5)
+    (+ a b))
+  (display (foo 10)) (newline)
+  a)
+</code></pre>
+<blockquote>
+<p>Sim, <code>foo</code> tem vários problemas.
+Tente corrigi-los.</p>
+<p>Procure escrever em Scheme a definição de um procedimento que calcula em um ponto <code>x</code> o valor do polinômio \( x^2 - x -1 \).</p>
+<p>Em seguida, implemente um procedimento <code>(list-ref lst n)</code> que retorna o n-ésimo elemento de uma lista.</p>
+</blockquote>
+<h1><a class="header" href="#repetição-via-recursão" id="repetição-via-recursão">Repetição via Recursão</a></h1>
+<p>Quando o meio de abstração para procedimentos consiste quase unicamente em definir, nomear e invocar funções, utilizamos recursão para construir processos iterativos (enquanto que em outras linguagens teríamos laços como <code>while</code> e <code>for</code>).</p>
+<h2><a class="header" href="#recursão-linear" id="recursão-linear">Recursão Linear</a></h2>
+<p>Vejamos o exemplo clássico da função recursiva que calcula o fatorial de um número:</p>
+<pre><code class="language-scheme">(define (fac n)
+  (if (= n 0) 1
+      (* n (fac (- n 1)))))
+</code></pre>
+<p>Como o procedimento <code>fac</code> é unidirecional e não gera efeitos colaterais - uma <strong>função pura</strong> - podemos computar o processo recursivo através de um modelo simples: basta substituir a definição de <code>fac</code> sempre que encontrarmos uma chamada, trocando também o argumento formal <code>n</code> no esqueleto do procedimento pelo valor passado na evocação.
+No exemplo abaixo já foi tomado o branch correto na expressão condicional.</p>
+<pre><code class="language-scheme">         (fac 4)
+      (* 4 (fac 3))
+    (* 4 (* 3 (fac 2)))
+  (* 4 (* 3 (* 2 (fac 1))))
+(* 4 (* 3 (* 2 (* 1 (fac 0)))))
+  (* 4 (* 3 (* 2 (* 1 1))))
+    (* 4 (* 3 (* 2 1)))
+      (* 4 (* 3 2))
+        (* 4 6)
+          24
+</code></pre>
+<p>Destaca-se que a computação deve armazenar no contexto do corpo da função <code>fac</code> a associação do valor da variável <code>n</code>.
+Isso acontece pois a multiplicação em <code>(* n (fac (- n 1)))</code> é avaliada somente após o retorno da chamada recursiva.</p>
+<p>Assim, o processo transcorre tanto em tempo linear (altura da árvore) como em espaço linear (tamanho da pilha de chamadas) em relação à entrada <code>n</code>.</p>
+<h2><a class="header" href="#recursão-iterativa-tail-recursion" id="recursão-iterativa-tail-recursion">Recursão Iterativa: <em>Tail-Recursion</em></a></h2>
+<p>Um outro exemplo de procedimento recursivo é o algoritmo de Euclides:</p>
+<pre><code class="language-scheme">(define (gcd a b)
+  (if (= b 0) a
+      (gcd b (modulo a b))))
+</code></pre>
+<p>Compare o processo gerado com o anterior.</p>
+<pre><code class="language-scheme">(gcd 1071 462)
+(gcd 462 147)
+(gcd 147 21)
+(gcd 21 0)
+21
+</code></pre>
+<p>Perceba que no caso do <code>gcd</code>, a computação não exige o armazenamento do contexto antes das chamadas recursivas: <strong>toda a informação necessária encontra-se nos argumentos da função</strong>.</p>
+<p>Ambos os procedimentos denotam <strong>recursões lineares</strong>, ou seja, onde a invocação da função ocorre uma única vez durante a sua avaliação.
+Entretanto, enquanto <code>fac</code> toma uma quantidade de memória proporcional ao argumento de entrada, o processo descrito por <code>gcd</code> exige espaço constante e portanto constitui ainda uma <strong>iteração linear</strong>.</p>
+<p>O que diferencia os dois procedimentos é o fato de que a última expressão no corpo de <code>gcd</code> é a invocação de uma função.
+Quando isso acontece dizemos que a função possui uma <a href="https://en.wikipedia.org/wiki/Tail_call"><em>tail-call</em></a> (chamada de cauda ou terminal) e quando a função evocada é recursiva, dizemos que ela é <em><strong>tail-recursive</strong></em>.
+Esse fenômeno possibilida a aplicação da chamada <em>Tail Call Optimization</em>, que elimina a necessidade de ocupar espaço na pilha de execução do programa.</p>
+<p>A especificação da linguagem Scheme exige que implementações sejam <a href="http://people.csail.mit.edu/jaffer/r5rs/Proper-tail-recursion.html"><em>properly tail-recursive</em></a>, o que significa que o número de execuções de funções em <em>tail-calls</em> sequenciais é <strong>ilimitado</strong>.</p>
+<h2><a class="header" href="#recursão-não-linear-e-linearização" id="recursão-não-linear-e-linearização">Recursão Não-Linear e Linearização</a></h2>
+<p>Outras classificações de recursão incluem <strong>recursão mútua</strong> (<code>odd?</code> e <code>even?</code> definidas anteriormente) e <strong>recursão múltipla</strong> - onde a função é invocada em seu próprio corpo mais de uma vez.
+Um exemplo famoso de recursão múltipla binária é a função que calcula os números da <a href="https://en.wikipedia.org/wiki/Fibonacci_number">sequência de Fibonacci</a>:</p>
+<pre><code class="language-scheme">(define (fib n)
+  (cond ((= n 0) 0)
+        ((= n 1) 1)
+        (else (+ (fib (- n 1))
+                 (fib (- n 2))))))
+</code></pre>
+<p>A árvore de chamadas recursivas gerada é bem maior nesse caso:</p>
+<pre><code class="language-scheme">                            (fib 4)
+          (+ (fib 3)                     (fib 2))
+    (+ (fib 2)     (fib 1) )       (+ (fib 1) (fib 0))
+(+ (fib 1) (fib 0))    1                 1       0
+      1       0
+       (+ 1 0)         1              (+ 1       0)
+              (+ 1 1)                        1
+                            (+ 2 1)
+                               3
+</code></pre>
+<p>Para estimar a complexidade do processo, observe que o número de vezes em que o caso base da recursão é atingido na execução de <code>(fib n)</code> é exatamente igual ao (n+1)ésimo número de Fibonacci.
+Isso significa que esse procedimento é calculado em <strong>tempo exponencial</strong> proporcional à \( \phi ^ {n+1} \), onde \(\phi\) é o <a href="https://en.wikipedia.org/wiki/Golden_ratio">número de ouro</a>.</p>
+<p>Um primeiro passo para otimizar a computação é expressar o procedimento em uma iteração linear:</p>
+<pre><code class="language-scheme">(define (fibo n)
+  (let iter ((n n) (prev 1) (curr 0))
+    (if (= n 0) curr
+        (iter (- n 1) curr (+ prev curr)))))
+</code></pre>
+<blockquote>
+<p>Compare o tempo de execução de <code>fib</code> e <code>fibo</code> para n = 45. <br/>
+Aproveite para tentar transformar o procedimento <code>fac</code> em uma iteração linear.</p>
+</blockquote>
+<p>Alguns processos lineares podem ser otimizados ainda mais se explorarmos alguma propriedade que permita realizar, de uma vez, uma certa operação equivalente a múltiplas iterações.</p>
+<pre><code class="language-scheme">;; recursao O(2^(n-1)) para base 2
+;; 2^n = 2 * 2^(n-1) = 2^(n-1) + 2^(n-1)
+(define (2^ n)
+  (cond ((= n 0) 1)
+        ((= n 1) 2)
+        (else (+ (2^ (- n 1))
+                 (2^ (- n 1))))))
+
+;; recursao O(n)
+;; b^n = b * b^(n-1)
+(define (^ b n)
+  (if (= n 0) 1 (* b (^ b (- n 1)))))
+
+;; iteracao O(n)
+;; b^n = b * b^(n-1)
+(define (^ b n)
+  (let iter ((n n) (prod 1))
+    (if (= n 0) prod
+        (iter (- n 1) (* b prod)))))
+
+;; recursao O(log2(n))
+;; b^n = (b^(n/2))^2
+(define (^ b n)
+  (cond ((= n 0) 1)
+        ((even? n) (square (^ b (halve n))))
+        (else (* b (^ b (- n 1))))))
+
+;; iteracao O(log2(n))
+;; b^n = (b^2)^(n/2)
+(define (^ b n)
+  (define (iter b n prod)
+    (cond ((= n 0) prod)
+          ((even? n) (iter (square b) (halve n) prod))
+          (else (iter b (- n 1) (* b prod)))))
+  (if (&lt; n 0)
+      (iter (/ 1 b) (- n) 1)
+      (iter b n 1)))
+
+</code></pre>
+<pre><code class="language-scheme">;; PS:
+(define (halve x) (ash x -1))
+(define (square x) (* x x))
+</code></pre>
+<blockquote>
+<p>Tente aplicar a mesma técnica para computar a multiplicação de dois inteiros <code>b</code> e <code>n</code> em tempo logarítmico.
+O procedimento resultante deve se assemelhar ao algoritmo de <a href="https://en.wikipedia.org/wiki/Ancient_Egyptian_multiplication">multiplicação egípcia/russa</a>.</p>
+</blockquote>
+<h2><a class="header" href="#recursão-linear-1" id="recursão-linear-1">Recursão Linear</a></h2>
+<p>Vejamos o exemplo clássico da função recursiva que calcula o fatorial de um número:</p>
+<pre><code class="language-scheme">(define (fac n)
+  (if (= n 0) 1
+      (* n (fac (- n 1)))))
+</code></pre>
+<p>Como o procedimento <code>fac</code> é unidirecional e não gera efeitos colaterais - uma <strong>função pura</strong> - podemos computar o processo recursivo através de um modelo simples: basta substituir a definição de <code>fac</code> sempre que encontrarmos uma chamada, trocando também o argumento formal <code>n</code> no esqueleto do procedimento pelo valor passado na evocação.
+No exemplo abaixo já foi tomado o branch correto na expressão condicional.</p>
+<pre><code class="language-scheme">         (fac 4)
+      (* 4 (fac 3))
+    (* 4 (* 3 (fac 2)))
+  (* 4 (* 3 (* 2 (fac 1))))
+(* 4 (* 3 (* 2 (* 1 (fac 0)))))
+  (* 4 (* 3 (* 2 (* 1 1))))
+    (* 4 (* 3 (* 2 1)))
+      (* 4 (* 3 2))
+        (* 4 6)
+          24
+</code></pre>
+<p>Destaca-se que a computação deve armazenar no contexto do corpo da função <code>fac</code> a associação do valor da variável <code>n</code>.
+Isso acontece pois a multiplicação em <code>(* n (fac (- n 1)))</code> é avaliada somente após o retorno da chamada recursiva.</p>
+<p>Assim, o processo transcorre tanto em tempo linear (altura da árvore) como em espaço linear (tamanho da pilha de chamadas) em relação à entrada <code>n</code>.</p>
+<h2><a class="header" href="#recursão-iterativa-tail-recursion-1" id="recursão-iterativa-tail-recursion-1">Recursão Iterativa: <em>Tail-Recursion</em></a></h2>
+<p>Um outro exemplo de procedimento recursivo é o algoritmo de Euclides:</p>
+<pre><code class="language-scheme">(define (gcd a b)
+  (if (= b 0) a
+      (gcd b (modulo a b))))
+</code></pre>
+<p>Compare o processo gerado com o anterior.</p>
+<pre><code class="language-scheme">(gcd 1071 462)
+(gcd 462 147)
+(gcd 147 21)
+(gcd 21 0)
+21
+</code></pre>
+<p>Perceba que no caso do <code>gcd</code>, a computação não exige o armazenamento do contexto antes das chamadas recursivas: <strong>toda a informação necessária encontra-se nos argumentos da função</strong>.</p>
+<p>Ambos os procedimentos denotam <strong>recursões lineares</strong>, ou seja, onde a invocação da função ocorre uma única vez durante a sua avaliação.
+Entretanto, enquanto <code>fac</code> toma uma quantidade de memória proporcional ao argumento de entrada, o processo descrito por <code>gcd</code> exige espaço constante e portanto constitui ainda uma <strong>iteração linear</strong>.</p>
+<p>O que diferencia os dois procedimentos é o fato de que a última expressão no corpo de <code>gcd</code> é a invocação de uma função.
+Quando isso acontece dizemos que a função possui uma <a href="https://en.wikipedia.org/wiki/Tail_call"><em>tail-call</em></a> (chamada de cauda ou terminal) e quando a função evocada é recursiva, dizemos que ela é <em><strong>tail-recursive</strong></em>.
+Esse fenômeno possibilida a aplicação da chamada <em>Tail Call Optimization</em>, que elimina a necessidade de ocupar espaço na pilha de execução do programa.</p>
+<p>A especificação da linguagem Scheme exige que implementações sejam <a href="http://people.csail.mit.edu/jaffer/r5rs/Proper-tail-recursion.html"><em>properly tail-recursive</em></a>, o que significa que o número de execuções de funções em <em>tail-calls</em> sequenciais é <strong>ilimitado</strong>.</p>
+<h2><a class="header" href="#recursão-não-linear-e-linearização-1" id="recursão-não-linear-e-linearização-1">Recursão Não-Linear e Linearização</a></h2>
+<p>Outras classificações de recursão incluem <strong>recursão mútua</strong> (<code>odd?</code> e <code>even?</code> definidas anteriormente) e <strong>recursão múltipla</strong> - onde a função é invocada em seu próprio corpo mais de uma vez.
+Um exemplo famoso de recursão múltipla binária é a função que calcula os números da <a href="https://en.wikipedia.org/wiki/Fibonacci_number">sequência de Fibonacci</a>:</p>
+<pre><code class="language-scheme">(define (fib n)
+  (cond ((= n 0) 0)
+        ((= n 1) 1)
+        (else (+ (fib (- n 1))
+                 (fib (- n 2))))))
+</code></pre>
+<p>A árvore de chamadas recursivas gerada é bem maior nesse caso:</p>
+<pre><code class="language-scheme">                            (fib 4)
+          (+ (fib 3)                     (fib 2))
+    (+ (fib 2)     (fib 1) )       (+ (fib 1) (fib 0))
+(+ (fib 1) (fib 0))    1                 1       0
+      1       0
+       (+ 1 0)         1              (+ 1       0)
+              (+ 1 1)                        1
+                            (+ 2 1)
+                               3
+</code></pre>
+<p>Para estimar a complexidade do processo, observe que o número de vezes em que o caso base da recursão é atingido na execução de <code>(fib n)</code> é exatamente igual ao (n+1)ésimo número de Fibonacci.
+Isso significa que esse procedimento é calculado em <strong>tempo exponencial</strong> proporcional à \( \phi ^ {n+1} \), onde \(\phi\) é o <a href="https://en.wikipedia.org/wiki/Golden_ratio">número de ouro</a>.</p>
+<p>Um primeiro passo para otimizar a computação é expressar o procedimento em uma iteração linear:</p>
+<pre><code class="language-scheme">(define (fibo n)
+  (let iter ((n n) (prev 1) (curr 0))
+    (if (= n 0) curr
+        (iter (- n 1) curr (+ prev curr)))))
+</code></pre>
+<blockquote>
+<p>Compare o tempo de execução de <code>fib</code> e <code>fibo</code> para n = 45. <br/>
+Aproveite para tentar transformar o procedimento <code>fac</code> em uma iteração linear.</p>
+</blockquote>
+<p>Alguns processos lineares podem ser otimizados ainda mais se explorarmos alguma propriedade que permita realizar, de uma vez, uma certa operação equivalente a múltiplas iterações.</p>
+<pre><code class="language-scheme">;; recursao O(2^(n-1)) para base 2
+;; 2^n = 2 * 2^(n-1) = 2^(n-1) + 2^(n-1)
+(define (2^ n)
+  (cond ((= n 0) 1)
+        ((= n 1) 2)
+        (else (+ (2^ (- n 1))
+                 (2^ (- n 1))))))
+
+;; recursao O(n)
+;; b^n = b * b^(n-1)
+(define (^ b n)
+  (if (= n 0) 1 (* b (^ b (- n 1)))))
+
+;; iteracao O(n)
+;; b^n = b * b^(n-1)
+(define (^ b n)
+  (let iter ((n n) (prod 1))
+    (if (= n 0) prod
+        (iter (- n 1) (* b prod)))))
+
+;; recursao O(log2(n))
+;; b^n = (b^(n/2))^2
+(define (^ b n)
+  (cond ((= n 0) 1)
+        ((even? n) (square (^ b (halve n))))
+        (else (* b (^ b (- n 1))))))
+
+;; iteracao O(log2(n))
+;; b^n = (b^2)^(n/2)
+(define (^ b n)
+  (define (iter b n prod)
+    (cond ((= n 0) prod)
+          ((even? n) (iter (square b) (halve n) prod))
+          (else (iter b (- n 1) (* b prod)))))
+  (if (&lt; n 0)
+      (iter (/ 1 b) (- n) 1)
+      (iter b n 1)))
+
+</code></pre>
+<pre><code class="language-scheme">;; PS:
+(define (halve x) (ash x -1))
+(define (square x) (* x x))
+</code></pre>
+<blockquote>
+<p>Tente aplicar a mesma técnica para computar a multiplicação de dois inteiros <code>b</code> e <code>n</code> em tempo logarítmico.
+O procedimento resultante deve se assemelhar ao algoritmo de <a href="https://en.wikipedia.org/wiki/Ancient_Egyptian_multiplication">multiplicação egípcia/russa</a>.</p>
+</blockquote>
+<h1><a class="header" href="#abstração-funcional" id="abstração-funcional">Abstração Funcional</a></h1>
+<p>Como já foi mencionado, um dos aspectos mais marcantes do paradigma funcional é a abstração através de procedimentos nas chamadas <strong>funções de alta ordem</strong>.
+Uma das grandes vantagens destas é que podem encapsular a estrutura de controle do fluxo de execução de forma genérica, reduzindo ao máximo a repetição de código.</p>
+<blockquote>
+<p>A repetição instiga a abstração.</p>
+</blockquote>
+<h2><a class="header" href="#potenciação-rápida" id="potenciação-rápida">Potenciação Rápida</a></h2>
+<p>Por exemplo, ao procurar abstrair a otimização dos procedimentos de exponenciação inteira e da multiplicação egípcia, podemos destacar suas partes comuns.
+Ao fazê-lo, é possível imaginar que estamos calculando um tipo de &quot;potência&quot; para uma operação básica (onde a potenciação aditiva equivale à multiplicação e a potenciação multiplicativa equivale à exponenciação) em que acumulamos o resultado de consecutivas aplicações dessa operação entre uma base e o resultado acumulado até então.
+A otimização emerge de alguma propriedade da operação que permite torná-la &quot;mais potente&quot; através de alguma transformação em sua base.</p>
+<pre><code class="language-scheme">(define (pow power operation basis neutral succession)
+  (let iter ((b basis) (n power) (acc neutral))
+    (cond ((= n 0) acc)
+          ((even? n) (iter (succession b) (halve n) acc))
+          (else (iter b (- n 1) (operation b acc))))))
+</code></pre>
+<pre><code class="language-scheme">;; PS:
+(define (halve x) (ash x -1))
+(define (double x) (ash x 1))
+(define (square x) (* x x))
+(define (maybe-car lst alt)
+  (if (null? lst) alt
+      (car lst)))
+</code></pre>
+<p>O procedimento <code>pow</code> recebe todos os parâmetros necessários para computar a potência, inclusive outros procedimentos que são chamados durante a sua execução.
+Entretanto, seria interessante encapsular algumas dessas informações em uma dada operação potencializada, que por conta própria efetuaria a computação para qualquer base e expoente desejados.
+Essa tarefa pode ser cumprida por um <a href="https://en.wikipedia.org/wiki/Closure_(computer_programming)"><em>closure</em></a> - um tipo de procedimento que &quot;se lembra&quot; do escopo onde foi definido.
+Segue abaixo o exemplo de uma função que utiliza <code>pow</code> mas não calcula nada e apenas retorna um <em>closure</em> contendo a operação potencializada.</p>
+<pre><code class="language-scheme">(define (empower operation neutral . opts-succ)
+  (let ((succession (maybe-car opts-succ (lambda (x) (operation x x)))))
+    (lambda (basis power)
+      (pow power operation basis neutral succession))))
+</code></pre>
+<pre><code class="language-scheme">(define times (empower + 0))
+
+(define (mul b n)
+  (if (&lt; n 0)
+      (times (- b) (- n))
+      (times b n)))
+
+(define (^ b n)
+  (let ((raise (empower * 1)))
+    (if (&lt; n 0)
+        (raise (/ 1 b) (- n))
+        (raise b n))))
+
+(define (fibonacci n)
+  (let ((fn (cadr (pow ;; n-esima potencia
+                       (abs n)
+                       ;; da transformacao
+                       (lambda (coefs fibs)
+                         (let ((p (car coefs)) (q (cadr coefs))
+                               (a (car fibs)) (b (cadr fibs)))
+                           (list (+ (* b q) (* a (+ q p)))
+                                 (+ (* b p) (* a q)))))
+                       ;; a partir de uma base
+                       '(0 1)
+                       ;; acumulada sobre
+                       '(1 0)
+                       ;; onde a quadratura da base que
+                       ;; regula a potencia da operacao eh
+                       (lambda (coefs)
+                         (let ((p (car coefs)) (q (cadr coefs)))
+                           (list (+ (square q) (square p))
+                                 (+ (square q) (* 2 (* p q))))))))))
+    ;; &quot;negafibonacci&quot;
+    (if (and (&lt; n 0)
+             (even? n))
+        (- fn)
+        fn)))
+
+;; fibonacci matricial
+(define (fibona n) ;; n &gt; 0
+  (define (mul-matrix-2x2 A B)
+    (let ((a11 (caar A)) (a12 (cadar A))
+          (a21 (caadr A)) (a22 (cadadr A))
+          (b11 (caar B)) (b12 (cadar B))
+          (b21 (caadr B)) (b22 (cadadr B)))
+      (list (list (+ (* a11 b11) (* a12 b21))
+                  (+ (* a11 b12) (* a12 b22)))
+            (list (+ (* a21 b11) (* a22 b21))
+                  (+ (* a21 b12) (* a22 b22))))))
+  (let ((nth-transform (empower mul-matrix-2x2
+                                '((1 0)
+                                  (0 1)))))
+    (caar
+      (nth-transform '((1 1)
+                       (1 0))
+                     (- n 1)))))
+
+;; forma fechada
+(define phi (/ (+ 1 (sqrt 5)) 2)) ;; numero de ouro
+(define fi (- 1 phi)) ;; complemento de phi
+(define (fibonac n)
+  (round (/ (- (^ phi n) (^ fi n))
+            (sqrt 5))))
+</code></pre>
+<blockquote>
+<p>Compare o tempo de execução de <code>fibo</code> com <code>fibonacci</code> ou <code>fibona</code> para calcular o milionésimo (n = 1000000) número da sequência.
+Depois, faça o mesmo para <code>fibonac</code>.</p>
+</blockquote>
+<h2><a class="header" href="#pontos-fixos" id="pontos-fixos">Pontos Fixos</a></h2>
+<p>Vejamos agora um procedimento que não define um algoritmo para computar um valor, mas sim um método numérico para aproximar a raíz quadrada de um número:</p>
+<pre><code class="language-scheme">;; metodo babilonico
+(define (sqrt x)
+  (define (try guess)
+    (if (good-enough? guess) guess
+        (try (improve guess))))
+
+  (define (improve guess)
+    (average guess (/ x guess)))
+
+  (define (good-enough? guess)
+    (&lt; (abs (- (square guess) x)) tolerance))
+
+  (try 1.0))
+</code></pre>
+<pre><code class="language-scheme">;; PS:
+(define tolerance 1e-15)
+(define (average a b) (/ (+ a b) 2))
+(define (square x) (* x x))
+</code></pre>
+<p>Com um procedimento semelhante é possível aproximar uma solução da <a href="https://en.wikipedia.org/wiki/Transcendental_equation">equação transcedental</a> \( cos(x) = x \).</p>
+<pre><code class="language-scheme">(define (fixcos)
+  (define (retry old new)
+    (if (approx? new old) new
+        (retry new (cos new))))
+
+  (define (approx? a b)
+    (&lt; (abs (- a b)) tolerance))
+
+  (retry 0.0 (cos 0.0)))
+
+(define x (fixcos)) ;; solucao
+</code></pre>
+<blockquote>
+<p>Um método &quot;manual&quot; para achar esse valor envolve uma calculadora científica e a seguinte sequência de botões:</p>
+<pre><code class="language-plaintext">[1] [=] [COS] [ANS] [=] [=] [=] ...
+</code></pre>
+<p>Tendo isso em mente, tente implementar um procedimento <code>(fixpoint f x)</code> que generalize ambos os métodos apresentados.</p>
+</blockquote>
+<p>Nota-se uma ideia em comum: procuramos um <strong>ponto fixo</strong> ou ponto invariante k de uma função f(x) tal que \( f(k) = k \).
+Assim, supondo um valor intermediário c onde \( f(c) \approx k \), temos que \( f(f(...f(c)...)) = f^n(f(c)) = f^n(k) = k \), onde aplicamos f até que não haja mais variação (com uma certa tolerância) no resultado.</p>
+<pre><code class="language-scheme">(define (fixpoint f x . opts-tol)
+  (let* ((tolerance (maybe-car opts-tol 1e-9))
+         (approx? (lambda (a b) (&lt; (abs (- a b)) tolerance))))
+    (let try ((old x) (new (f x)))
+      (if (approx? old new) new
+          (try new (f new))))))
+</code></pre>
+<pre><code class="language-scheme">(fixpoint cos 0)
+
+(define (phi-rat tol)
+  (fixpoint
+    (lambda (rat)
+      (let ((fcurr (numerator rat))
+            (fprev (denominator rat)))
+        (/ (+ fcurr fprev) fcurr)))
+    1/1
+    tol))
+(define phi (exact-&gt;inexact (phi-rat 1e-15))) ;; =&gt; 102334155/63245986 = fib(40)/fib(39)
+
+(define (average-damp f)
+  (lambda (x) (average (f x) x)))
+
+(define (sqrt x)
+  (fixpoint (average-damp (lambda (y) (/ x y))) 1.0))
+
+(define (root f x . opts-tol) ;; metodo de Newton
+  (let* ((dx (maybe-car opts-tol 1e-8))
+         (df (deriv f dx)))
+    (fixpoint (lambda (x) (- x (/ (f x) (df x)))) x dx)))
+
+(define (deriv f dx)
+  (lambda (x) (/ (- (f (+ x dx)) (f x)) dx)))
+
+(define (sqrt x)
+  (root (lambda (y) (- x (square y))) 1.0))
+
+(define pi (root sin 3))
+
+(define phi (root (lambda (x) (+ (square x) (- x) -1)) 1.0 1e-11))
+</code></pre>
+<p>O <a href="https://en.wikipedia.org/wiki/Lambda_calculus">Cálculo Lambda</a> de Alonzo Church generaliza a noção de ponto fixo para funções, possibilitando a computação de procedimentos recursivos.
+Vejamos um exemplo partindo do algoritmo fatorial:</p>
+<pre><code class="language-scheme">(define (fac n)
+  (define f fac)
+  (if (= n 0) 1 (* n (f (- n 1)))))
+
+(define (facto n)
+  (define f facto)
+  (define (aux n)
+    (if (= n 0) 1 (* n (f (- n 1)))))
+  (aux n))
+
+(define (factor n)
+  (define (aux f n)
+    (if (= n 0) 1 (* n (f (- n 1)))))
+  (aux factor n))
+
+(define (factori n)
+  (define (aux f)
+    (lambda (n)
+      (if (= n 0) 1 (* n (f (- n 1))))))
+  ((aux factori) n))
+
+(define (factoria n)
+  (define (aux f)
+    (lambda (n)
+      (if (= n 0) 1 (* n (f (- n 1))))))
+  (define (rec f)
+    (lambda (n)
+      ((aux (f f)) n)))
+  (let ((fact (rec rec)))
+    (fact n)))
+</code></pre>
+<p>Perceba que a estrutura e o uso do procedimento <code>rec</code> podem ser facilmente generalizados na função de alta ordem ilustrada abaixo.
+Esse procedimento também é conhecido como <a href="https://en.wikipedia.org/wiki/Fixed-point_combinator#Y_combinator">Operador Y</a>.</p>
+<pre><code class="language-scheme">(define (fix f)
+  (define (g x)
+    (lambda (arg)
+      ((f (x x)) arg)))
+  (g g))
+</code></pre>
+<pre><code class="language-scheme">(define fact
+  (fix (lambda (f)
+         (lambda (n)
+           (if (= n 0) 1 (* n (f (- n 1))))))))
+</code></pre>
+<p>Imagine o processo como uma iteração sobre uma função <code>f</code> que inicialmente não sabe calcular fatoriais: a cada passo <code>f</code> é substituída por uma versão melhorada dela mesma <a href="https://en.wikipedia.org/wiki/Denotational_semantics">[1]</a>.
+Podemos representar o estado atual de <code>f</code> como um conjunto de duplas <code>(x,y)</code>, onde <code>f</code> associa uma entrada <code>x</code> à saída <code>y</code>.</p>
+<pre><code class="language-plaintext">Fe(x) = {}
+F0(x) = { (0,1) }
+F1(x) = { (0,1), (1,1) }
+F2(x) = { (0,1), (1,1), (2,2) }
+F3(x) = { (0,1), (1,1), (2,2), (3,6) }
+F4(x) = { (0,1), (1,1), (2,2), (3,6), (4,24) }
+F5(x) = { (0,1), (1,1), (2,2), (3,6), (4,24), (5,120) }
+...
+Fn(x) = fact(x), para x &lt;= n
+</code></pre>
+<p>Na prática, basta aplicar o modelo de substituição para computar a função recursivamente:</p>
+<pre><code class="language-scheme">(define curryed-fac
+  (lambda (f)
+    (lambda (n) (if (= n 0) 1 (* n (f (- n 1)))))))
+...
+(define fact (fix curryed-fac))
+;; substituindo fix(f=curryed-fac)
+(define fact
+  (define (g x)
+    (lambda (arg) ((curryed-fac (x x)) arg)))
+  (g g))
+;; substituindo g(x=g)
+(define fact
+  (lambda (arg) ((curryed-fac (g g)) arg)))
+...
+(fact 5)
+;; substituindo fact(arg=5)
+((curryed-fact (g g)) 5)
+;; substituindo g(x=g)
+((curryed-fact (lambda (arg) ((curryed-fac (g g)) arg))) 5)
+;; perceba que o lambda eh exatamente a definicao de fact
+((curryed-fact fact) 5)
+;; substituindo curryed-fact(f=fact)
+((lambda (n) (if (= n 0) 1 (* n (fact (- n 1))))) 5)
+;; substituindo lambda(n=5)
+(* 5 (fact 4))
+...
+</code></pre>
+<h2><a class="header" href="#potenciação-rápida-1" id="potenciação-rápida-1">Potenciação Rápida</a></h2>
+<p>Por exemplo, ao procurar abstrair a otimização dos procedimentos de exponenciação inteira e da multiplicação egípcia, podemos destacar suas partes comuns.
+Ao fazê-lo, é possível imaginar que estamos calculando um tipo de &quot;potência&quot; para uma operação básica (onde a potenciação aditiva equivale à multiplicação e a potenciação multiplicativa equivale à exponenciação) em que acumulamos o resultado de consecutivas aplicações dessa operação entre uma base e o resultado acumulado até então.
+A otimização emerge de alguma propriedade da operação que permite torná-la &quot;mais potente&quot; através de alguma transformação em sua base.</p>
+<pre><code class="language-scheme">(define (pow power operation basis neutral succession)
+  (let iter ((b basis) (n power) (acc neutral))
+    (cond ((= n 0) acc)
+          ((even? n) (iter (succession b) (halve n) acc))
+          (else (iter b (- n 1) (operation b acc))))))
+</code></pre>
+<pre><code class="language-scheme">;; PS:
+(define (halve x) (ash x -1))
+(define (double x) (ash x 1))
+(define (square x) (* x x))
+(define (maybe-car lst alt)
+  (if (null? lst) alt
+      (car lst)))
+</code></pre>
+<p>O procedimento <code>pow</code> recebe todos os parâmetros necessários para computar a potência, inclusive outros procedimentos que são chamados durante a sua execução.
+Entretanto, seria interessante encapsular algumas dessas informações em uma dada operação potencializada, que por conta própria efetuaria a computação para qualquer base e expoente desejados.
+Essa tarefa pode ser cumprida por um <a href="https://en.wikipedia.org/wiki/Closure_(computer_programming)"><em>closure</em></a> - um tipo de procedimento que &quot;se lembra&quot; do escopo onde foi definido.
+Segue abaixo o exemplo de uma função que utiliza <code>pow</code> mas não calcula nada e apenas retorna um <em>closure</em> contendo a operação potencializada.</p>
+<pre><code class="language-scheme">(define (empower operation neutral . opts-succ)
+  (let ((succession (maybe-car opts-succ (lambda (x) (operation x x)))))
+    (lambda (basis power)
+      (pow power operation basis neutral succession))))
+</code></pre>
+<pre><code class="language-scheme">(define times (empower + 0))
+
+(define (mul b n)
+  (if (&lt; n 0)
+      (times (- b) (- n))
+      (times b n)))
+
+(define (^ b n)
+  (let ((raise (empower * 1)))
+    (if (&lt; n 0)
+        (raise (/ 1 b) (- n))
+        (raise b n))))
+
+(define (fibonacci n)
+  (let ((fn (cadr (pow ;; n-esima potencia
+                       (abs n)
+                       ;; da transformacao
+                       (lambda (coefs fibs)
+                         (let ((p (car coefs)) (q (cadr coefs))
+                               (a (car fibs)) (b (cadr fibs)))
+                           (list (+ (* b q) (* a (+ q p)))
+                                 (+ (* b p) (* a q)))))
+                       ;; a partir de uma base
+                       '(0 1)
+                       ;; acumulada sobre
+                       '(1 0)
+                       ;; onde a quadratura da base que
+                       ;; regula a potencia da operacao eh
+                       (lambda (coefs)
+                         (let ((p (car coefs)) (q (cadr coefs)))
+                           (list (+ (square q) (square p))
+                                 (+ (square q) (* 2 (* p q))))))))))
+    ;; &quot;negafibonacci&quot;
+    (if (and (&lt; n 0)
+             (even? n))
+        (- fn)
+        fn)))
+
+;; fibonacci matricial
+(define (fibona n) ;; n &gt; 0
+  (define (mul-matrix-2x2 A B)
+    (let ((a11 (caar A)) (a12 (cadar A))
+          (a21 (caadr A)) (a22 (cadadr A))
+          (b11 (caar B)) (b12 (cadar B))
+          (b21 (caadr B)) (b22 (cadadr B)))
+      (list (list (+ (* a11 b11) (* a12 b21))
+                  (+ (* a11 b12) (* a12 b22)))
+            (list (+ (* a21 b11) (* a22 b21))
+                  (+ (* a21 b12) (* a22 b22))))))
+  (let ((nth-transform (empower mul-matrix-2x2
+                                '((1 0)
+                                  (0 1)))))
+    (caar
+      (nth-transform '((1 1)
+                       (1 0))
+                     (- n 1)))))
+
+;; forma fechada
+(define phi (/ (+ 1 (sqrt 5)) 2)) ;; numero de ouro
+(define fi (- 1 phi)) ;; complemento de phi
+(define (fibonac n)
+  (round (/ (- (^ phi n) (^ fi n))
+            (sqrt 5))))
+</code></pre>
+<blockquote>
+<p>Compare o tempo de execução de <code>fibo</code> com <code>fibonacci</code> ou <code>fibona</code> para calcular o milionésimo (n = 1000000) número da sequência.
+Depois, faça o mesmo para <code>fibonac</code>.</p>
+</blockquote>
+<h2><a class="header" href="#pontos-fixos-1" id="pontos-fixos-1">Pontos Fixos</a></h2>
+<p>Vejamos agora um procedimento que não define um algoritmo para computar um valor, mas sim um método numérico para aproximar a raíz quadrada de um número:</p>
+<pre><code class="language-scheme">;; metodo babilonico
+(define (sqrt x)
+  (define (try guess)
+    (if (good-enough? guess) guess
+        (try (improve guess))))
+
+  (define (improve guess)
+    (average guess (/ x guess)))
+
+  (define (good-enough? guess)
+    (&lt; (abs (- (square guess) x)) tolerance))
+
+  (try 1.0))
+</code></pre>
+<pre><code class="language-scheme">;; PS:
+(define tolerance 1e-15)
+(define (average a b) (/ (+ a b) 2))
+(define (square x) (* x x))
+</code></pre>
+<p>Com um procedimento semelhante é possível aproximar uma solução da <a href="https://en.wikipedia.org/wiki/Transcendental_equation">equação transcedental</a> \( cos(x) = x \).</p>
+<pre><code class="language-scheme">(define (fixcos)
+  (define (retry old new)
+    (if (approx? new old) new
+        (retry new (cos new))))
+
+  (define (approx? a b)
+    (&lt; (abs (- a b)) tolerance))
+
+  (retry 0.0 (cos 0.0)))
+
+(define x (fixcos)) ;; solucao
+</code></pre>
+<blockquote>
+<p>Um método &quot;manual&quot; para achar esse valor envolve uma calculadora científica e a seguinte sequência de botões:</p>
+<pre><code class="language-plaintext">[1] [=] [COS] [ANS] [=] [=] [=] ...
+</code></pre>
+<p>Tendo isso em mente, tente implementar um procedimento <code>(fixpoint f x)</code> que generalize ambos os métodos apresentados.</p>
+</blockquote>
+<p>Nota-se uma ideia em comum: procuramos um <strong>ponto fixo</strong> ou ponto invariante k de uma função f(x) tal que \( f(k) = k \).
+Assim, supondo um valor intermediário c onde \( f(c) \approx k \), temos que \( f(f(...f(c)...)) = f^n(f(c)) = f^n(k) = k \), onde aplicamos f até que não haja mais variação (com uma certa tolerância) no resultado.</p>
+<pre><code class="language-scheme">(define (fixpoint f x . opts-tol)
+  (let* ((tolerance (maybe-car opts-tol 1e-9))
+         (approx? (lambda (a b) (&lt; (abs (- a b)) tolerance))))
+    (let try ((old x) (new (f x)))
+      (if (approx? old new) new
+          (try new (f new))))))
+</code></pre>
+<pre><code class="language-scheme">(fixpoint cos 0)
+
+(define (phi-rat tol)
+  (fixpoint
+    (lambda (rat)
+      (let ((fcurr (numerator rat))
+            (fprev (denominator rat)))
+        (/ (+ fcurr fprev) fcurr)))
+    1/1
+    tol))
+(define phi (exact-&gt;inexact (phi-rat 1e-15))) ;; =&gt; 102334155/63245986 = fib(40)/fib(39)
+
+(define (average-damp f)
+  (lambda (x) (average (f x) x)))
+
+(define (sqrt x)
+  (fixpoint (average-damp (lambda (y) (/ x y))) 1.0))
+
+(define (root f x . opts-tol) ;; metodo de Newton
+  (let* ((dx (maybe-car opts-tol 1e-8))
+         (df (deriv f dx)))
+    (fixpoint (lambda (x) (- x (/ (f x) (df x)))) x dx)))
+
+(define (deriv f dx)
+  (lambda (x) (/ (- (f (+ x dx)) (f x)) dx)))
+
+(define (sqrt x)
+  (root (lambda (y) (- x (square y))) 1.0))
+
+(define pi (root sin 3))
+
+(define phi (root (lambda (x) (+ (square x) (- x) -1)) 1.0 1e-11))
+</code></pre>
+<p>O <a href="https://en.wikipedia.org/wiki/Lambda_calculus">Cálculo Lambda</a> de Alonzo Church generaliza a noção de ponto fixo para funções, possibilitando a computação de procedimentos recursivos.
+Vejamos um exemplo partindo do algoritmo fatorial:</p>
+<pre><code class="language-scheme">(define (fac n)
+  (define f fac)
+  (if (= n 0) 1 (* n (f (- n 1)))))
+
+(define (facto n)
+  (define f facto)
+  (define (aux n)
+    (if (= n 0) 1 (* n (f (- n 1)))))
+  (aux n))
+
+(define (factor n)
+  (define (aux f n)
+    (if (= n 0) 1 (* n (f (- n 1)))))
+  (aux factor n))
+
+(define (factori n)
+  (define (aux f)
+    (lambda (n)
+      (if (= n 0) 1 (* n (f (- n 1))))))
+  ((aux factori) n))
+
+(define (factoria n)
+  (define (aux f)
+    (lambda (n)
+      (if (= n 0) 1 (* n (f (- n 1))))))
+  (define (rec f)
+    (lambda (n)
+      ((aux (f f)) n)))
+  (let ((fact (rec rec)))
+    (fact n)))
+</code></pre>
+<p>Perceba que a estrutura e o uso do procedimento <code>rec</code> podem ser facilmente generalizados na função de alta ordem ilustrada abaixo.
+Esse procedimento também é conhecido como <a href="https://en.wikipedia.org/wiki/Fixed-point_combinator#Y_combinator">Operador Y</a>.</p>
+<pre><code class="language-scheme">(define (fix f)
+  (define (g x)
+    (lambda (arg)
+      ((f (x x)) arg)))
+  (g g))
+</code></pre>
+<pre><code class="language-scheme">(define fact
+  (fix (lambda (f)
+         (lambda (n)
+           (if (= n 0) 1 (* n (f (- n 1))))))))
+</code></pre>
+<p>Imagine o processo como uma iteração sobre uma função <code>f</code> que inicialmente não sabe calcular fatoriais: a cada passo <code>f</code> é substituída por uma versão melhorada dela mesma <a href="https://en.wikipedia.org/wiki/Denotational_semantics">[1]</a>.
+Podemos representar o estado atual de <code>f</code> como um conjunto de duplas <code>(x,y)</code>, onde <code>f</code> associa uma entrada <code>x</code> à saída <code>y</code>.</p>
+<pre><code class="language-plaintext">Fe(x) = {}
+F0(x) = { (0,1) }
+F1(x) = { (0,1), (1,1) }
+F2(x) = { (0,1), (1,1), (2,2) }
+F3(x) = { (0,1), (1,1), (2,2), (3,6) }
+F4(x) = { (0,1), (1,1), (2,2), (3,6), (4,24) }
+F5(x) = { (0,1), (1,1), (2,2), (3,6), (4,24), (5,120) }
+...
+Fn(x) = fact(x), para x &lt;= n
+</code></pre>
+<p>Na prática, basta aplicar o modelo de substituição para computar a função recursivamente:</p>
+<pre><code class="language-scheme">(define curryed-fac
+  (lambda (f)
+    (lambda (n) (if (= n 0) 1 (* n (f (- n 1)))))))
+...
+(define fact (fix curryed-fac))
+;; substituindo fix(f=curryed-fac)
+(define fact
+  (define (g x)
+    (lambda (arg) ((curryed-fac (x x)) arg)))
+  (g g))
+;; substituindo g(x=g)
+(define fact
+  (lambda (arg) ((curryed-fac (g g)) arg)))
+...
+(fact 5)
+;; substituindo fact(arg=5)
+((curryed-fact (g g)) 5)
+;; substituindo g(x=g)
+((curryed-fact (lambda (arg) ((curryed-fac (g g)) arg))) 5)
+;; perceba que o lambda eh exatamente a definicao de fact
+((curryed-fact fact) 5)
+;; substituindo curryed-fact(f=fact)
+((lambda (n) (if (= n 0) 1 (* n (fact (- n 1))))) 5)
+;; substituindo lambda(n=5)
+(* 5 (fact 4))
+...
+</code></pre>
+<h1><a class="header" href="#abstração-metalinguística" id="abstração-metalinguística">Abstração Metalinguística</a></h1>
+<p>A <strong>homoiconicidade</strong> de Scheme foi brevemente mencionada na seção introdutória.
+Vejamos agora como utilizar essa característica para facilmente produzir procedimentos.
+Assim, estaremos utilizando Scheme como uma metalinguagem para Scheme, podendo enfim afirmar que ela é uma linguagem <strong>metacircular</strong>, ou seja, capaz de falar sobre ela mesma.</p>
+<h2><a class="header" href="#processamento-simbólico" id="processamento-simbólico">Processamento Simbólico</a></h2>
+<p>O procedimento <code>eval</code> (complementado por <code>apply</code>) é a principal ferramenta para abstração metalinguística em Scheme.
+Para utilizá-lo, basta fornecer uma expressão simbólica válida e um objeto representando o ambiente computacional onde ela será avaliada; o retorno de <code>eval</code> será o valor resultante da interpretação daquela expressão.</p>
+<pre><code class="language-scheme">(define env (scheme-report-environment 5))
+
+'(+ 1 1)              ; =&gt; (+ 1 1)
+(list '+ 1 1)         ; =&gt; (+ 1 1)
+(+ 1 1)               ; =&gt; 2
+(eval '(+ 1 1) env)   ; =&gt; 2
+
+(define x 7)
+(define y 5)
+'(- x y)              ; =&gt; (- x y)
+(list '- x y)         ; =&gt; (- 7 5)
+(- x y)               ; =&gt; 2
+`(- ,x ,y)            ; =&gt; (- 7 5)
+(eval `(- ,x ,y) env) ; =&gt; 2
+(eval '(- x y) env)   ; =&gt; Unbound variable: x
+</code></pre>
+<blockquote>
+<p>Com base nos exemplos anteriores, explique como funcionam as citações parciais com os símbolos <code>`</code> e <code>,</code></p>
+</blockquote>
+<p>O <a href="https://en.wikipedia.org/wiki/Horner&#x27;s_method">método de Horner</a> costuma ser utilizado para calcular o valor de um polinômio de forma a evitar exponenciações; efetua apenas n adições e n multiplicações para um polinômio de grau n.</p>
+<p>\[ Pn(x) = a_0 + a_1 x + a_2 x^2 + ... + a_n x^n \]
+\[ Pn(x) = a_0 + x (a_1 + x (a_2 + x(...a_n...))) \]</p>
+<p>Vamos aplicar o método de uma maneira um tanto não-convencional, em um algoritmo que &quot;compila&quot; uma lista de coeficientes e gera um procedimento que calcula o polinômio equivalente na forma de Horner:</p>
+<pre><code class="language-scheme">(define (horner x pn)
+    (if (null? (cdr pn))
+        (car pn)
+        `(+ ,(car pn) (* ,x ,(horner x (cdr pn))))))
+
+(define (make-polynomial x first-coef . rest-coefs)
+  (let ((polynomial (horner x (cons first-coef rest-coefs))))
+    (eval
+      (list 'lambda (list x) polynomial)
+      (interaction-environment))))
+</code></pre>
+<h3><a class="header" href="#diferenciação-analítica" id="diferenciação-analítica">Diferenciação Analítica</a></h3>
+<p>Um outra maneira de utilizar Scheme como metalinguagem circular é na obtenção da derivada analítica de uma função.
+Nesse caso, não é o procedimento que computa a função que é passado ao gerador (como era o caso na diferenciação numérica utilizada no método de Newton de uma seção anterior), mas sim uma descrição de como seria o código desse procedimento na linguagem Scheme.</p>
+<pre><code class="language-scheme">(define (differentiate var sexpr)
+  (cond ((number? sexpr) 0)
+        ((variable? sexpr)
+         (if (same-variable? sexpr var) 1 0))
+        ((sum? sexpr)
+         (make-sum (differentiate var (augend sexpr))
+                   (differentiate var (addend sexpr))))
+        ((product? sexpr)
+         (make-sum
+           (make-product (multiplier sexpr)
+                         (differentiate var (multiplicand sexpr)))
+           (make-product (differentiate var (multiplier sexpr))
+                         (multiplicand sexpr))))
+        (else
+         (error &quot;unknown expression type -- DERIV&quot; sexpr))))
+
+(define (make-derivative var sexpr)
+  (let ((deriv (differentiate var sexpr)))
+    (eval
+      `(lambda (,var) ,deriv)
+      (interaction-environment))))
+
+
+(define (variable? x)
+  (symbol? x))
+
+(define (same-variable? v1 v2)
+  (and (variable? v1) (variable? v2) (eq? v1 v2)))
+
+(define (make-sum augend addend)
+  (cond ((and (number? addend) (number? augend)) (+ augend addend))
+        ((and (number? augend) (= augend 0)) addend)
+        ((and (number? addend) (= addend 0)) augend)
+        (else (list '+ augend addend))))
+
+(define (sum? x)
+  (and (list? x) (eq? (car x) '+)))
+
+(define (augend s)
+  (cadr s))
+
+(define (addend s)
+  (caddr s))
+
+(define (make-product multiplier multiplicand)
+  (define (=number? sexpr num)
+    (and (number? sexpr) (= sexpr num)))
+  (cond ((or (=number? multiplier 0) (=number? multiplicand 0))
+          0)
+        ((and (number? multiplier) (number? multiplicand))
+          (* multiplier multiplicand))
+        ((=number? multiplier 1) multiplicand)
+        ((=number? multiplicand 1) multiplier)
+        (else (list '* multiplier multiplicand))))
+
+(define (product? x)
+  (and (list? x) (eq? (car x) '*)))
+
+(define (multiplier p)
+  (cadr p))
+
+(define (multiplicand p)
+  (caddr p))
+</code></pre>
+<blockquote>
+<p>Adicione mais algumas <a href="https://en.wikipedia.org/wiki/Differentiation_rules">regras de diferenciação</a> no programa acima.</p>
+</blockquote>
+<p>A partir do código dado temos um sistema capaz de gerar procedimentos que computam polinômios arbitrários (de uma variável independente), assim como suas derivadas (incluindo derivadas parciais).</p>
+<pre><code class="language-scheme">(define coefs '(-1 -1 1))
+
+(define p
+  (apply horner
+         (list 'x coefs))) ;; p = x^2 - x - 1
+
+(define f
+  (apply make-polynomial
+         (cons 'x coefs))) ;; f(x) = p(x)
+
+(define df
+  (make-derivative 'x p))  ;; df(x) = p'(x) = 2x - 1
+</code></pre>
+<blockquote>
+<p>Pense sobre como seria possível expandir esse programa para permitir a geração de polinômios multivariados.
+Você pode discutir suas ideias na <a href="./discussion.html">seção de comentários</a> desse site.</p>
+</blockquote>
+<h2><a class="header" href="#processamento-simbólico-1" id="processamento-simbólico-1">Processamento Simbólico</a></h2>
+<p>O procedimento <code>eval</code> (complementado por <code>apply</code>) é a principal ferramenta para abstração metalinguística em Scheme.
+Para utilizá-lo, basta fornecer uma expressão simbólica válida e um objeto representando o ambiente computacional onde ela será avaliada; o retorno de <code>eval</code> será o valor resultante da interpretação daquela expressão.</p>
+<pre><code class="language-scheme">(define env (scheme-report-environment 5))
+
+'(+ 1 1)              ; =&gt; (+ 1 1)
+(list '+ 1 1)         ; =&gt; (+ 1 1)
+(+ 1 1)               ; =&gt; 2
+(eval '(+ 1 1) env)   ; =&gt; 2
+
+(define x 7)
+(define y 5)
+'(- x y)              ; =&gt; (- x y)
+(list '- x y)         ; =&gt; (- 7 5)
+(- x y)               ; =&gt; 2
+`(- ,x ,y)            ; =&gt; (- 7 5)
+(eval `(- ,x ,y) env) ; =&gt; 2
+(eval '(- x y) env)   ; =&gt; Unbound variable: x
+</code></pre>
+<blockquote>
+<p>Com base nos exemplos anteriores, explique como funcionam as citações parciais com os símbolos <code>`</code> e <code>,</code></p>
+</blockquote>
+<p>O <a href="https://en.wikipedia.org/wiki/Horner&#x27;s_method">método de Horner</a> costuma ser utilizado para calcular o valor de um polinômio de forma a evitar exponenciações; efetua apenas n adições e n multiplicações para um polinômio de grau n.</p>
+<p>\[ Pn(x) = a_0 + a_1 x + a_2 x^2 + ... + a_n x^n \]
+\[ Pn(x) = a_0 + x (a_1 + x (a_2 + x(...a_n...))) \]</p>
+<p>Vamos aplicar o método de uma maneira um tanto não-convencional, em um algoritmo que &quot;compila&quot; uma lista de coeficientes e gera um procedimento que calcula o polinômio equivalente na forma de Horner:</p>
+<pre><code class="language-scheme">(define (horner x pn)
+    (if (null? (cdr pn))
+        (car pn)
+        `(+ ,(car pn) (* ,x ,(horner x (cdr pn))))))
+
+(define (make-polynomial x first-coef . rest-coefs)
+  (let ((polynomial (horner x (cons first-coef rest-coefs))))
+    (eval
+      (list 'lambda (list x) polynomial)
+      (interaction-environment))))
+</code></pre>
+<h3><a class="header" href="#diferenciação-analítica-1" id="diferenciação-analítica-1">Diferenciação Analítica</a></h3>
+<p>Um outra maneira de utilizar Scheme como metalinguagem circular é na obtenção da derivada analítica de uma função.
+Nesse caso, não é o procedimento que computa a função que é passado ao gerador (como era o caso na diferenciação numérica utilizada no método de Newton de uma seção anterior), mas sim uma descrição de como seria o código desse procedimento na linguagem Scheme.</p>
+<pre><code class="language-scheme">(define (differentiate var sexpr)
+  (cond ((number? sexpr) 0)
+        ((variable? sexpr)
+         (if (same-variable? sexpr var) 1 0))
+        ((sum? sexpr)
+         (make-sum (differentiate var (augend sexpr))
+                   (differentiate var (addend sexpr))))
+        ((product? sexpr)
+         (make-sum
+           (make-product (multiplier sexpr)
+                         (differentiate var (multiplicand sexpr)))
+           (make-product (differentiate var (multiplier sexpr))
+                         (multiplicand sexpr))))
+        (else
+         (error &quot;unknown expression type -- DERIV&quot; sexpr))))
+
+(define (make-derivative var sexpr)
+  (let ((deriv (differentiate var sexpr)))
+    (eval
+      `(lambda (,var) ,deriv)
+      (interaction-environment))))
+
+
+(define (variable? x)
+  (symbol? x))
+
+(define (same-variable? v1 v2)
+  (and (variable? v1) (variable? v2) (eq? v1 v2)))
+
+(define (make-sum augend addend)
+  (cond ((and (number? addend) (number? augend)) (+ augend addend))
+        ((and (number? augend) (= augend 0)) addend)
+        ((and (number? addend) (= addend 0)) augend)
+        (else (list '+ augend addend))))
+
+(define (sum? x)
+  (and (list? x) (eq? (car x) '+)))
+
+(define (augend s)
+  (cadr s))
+
+(define (addend s)
+  (caddr s))
+
+(define (make-product multiplier multiplicand)
+  (define (=number? sexpr num)
+    (and (number? sexpr) (= sexpr num)))
+  (cond ((or (=number? multiplier 0) (=number? multiplicand 0))
+          0)
+        ((and (number? multiplier) (number? multiplicand))
+          (* multiplier multiplicand))
+        ((=number? multiplier 1) multiplicand)
+        ((=number? multiplicand 1) multiplier)
+        (else (list '* multiplier multiplicand))))
+
+(define (product? x)
+  (and (list? x) (eq? (car x) '*)))
+
+(define (multiplier p)
+  (cadr p))
+
+(define (multiplicand p)
+  (caddr p))
+</code></pre>
+<blockquote>
+<p>Adicione mais algumas <a href="https://en.wikipedia.org/wiki/Differentiation_rules">regras de diferenciação</a> no programa acima.</p>
+</blockquote>
+<p>A partir do código dado temos um sistema capaz de gerar procedimentos que computam polinômios arbitrários (de uma variável independente), assim como suas derivadas (incluindo derivadas parciais).</p>
+<pre><code class="language-scheme">(define coefs '(-1 -1 1))
+
+(define p
+  (apply horner
+         (list 'x coefs))) ;; p = x^2 - x - 1
+
+(define f
+  (apply make-polynomial
+         (cons 'x coefs))) ;; f(x) = p(x)
+
+(define df
+  (make-derivative 'x p))  ;; df(x) = p'(x) = 2x - 1
+</code></pre>
+<blockquote>
+<p>Pense sobre como seria possível expandir esse programa para permitir a geração de polinômios multivariados.
+Você pode discutir suas ideias na <a href="./discussion.html">seção de comentários</a> desse site.</p>
+</blockquote>
+<h1><a class="header" href="#sistemas-computacionais" id="sistemas-computacionais">Sistemas Computacionais</a></h1>
+<p>Até então temos visto programas que operam sobre dados em uma grande composição de funções, onde a saída de um procedimento alimenta a entrada de outro e assim por diante.
+O <strong>fluxo de dados</strong> é sempre unidirecional e <strong>depende somente do arranjo dos procedimentos e das entradas iniciais</strong>, caracterizando programas <strong>puramente funcionais</strong>.
+Além disso, o modelo aplicado para computar o resultado de um programa é muito simples, bastando substituir aplicações de procedimentos por sua definição instanciada com os argumentos fornecidos.</p>
+<p>Alguns problemas exigem um <strong>fluxo de dados</strong> diferente.
+Gostaríamos de introduzir maneiras de alterar o comportamento do programa de formas diferentes <strong>dependendo do instante em que o sistema se encontra</strong>.</p>
+<h3><a class="header" href="#perceba-que-desde-o-início-da-oficina-até-este-ponto-jamais-fez-se-necessário-utilizar-conceitos-como-variáveis-atribuições-ou-estado-mutável-é-o-que-faremos-agora" id="perceba-que-desde-o-início-da-oficina-até-este-ponto-jamais-fez-se-necessário-utilizar-conceitos-como-variáveis-atribuições-ou-estado-mutável-é-o-que-faremos-agora">Perceba que, <strong>desde o início da oficina até este ponto, jamais fez-se necessário utilizar conceitos como variáveis, atribuições ou estado mutável</strong>; é o que faremos agora.</a></h3>
+<blockquote>
+<p>Na medida em que atribuições e ações de mudança são introduzidas na programação, acabamos de nos sujeitar a todos os problemas terríveis que vêm assolando filósofos por milhares de anos. (<a href="https://www.youtube.com/watch?v=dO1aqPBJCPg&amp;list=PLE18841CABEA24090&amp;index=9">Sussman, 1968</a>)</p>
+</blockquote>
+<p>Em Scheme, a ferramenta para tal é <code>set!</code> e seus derivados<a href="https://www.youtube.com/watch?v=yedzRWhi-9E&amp;list=PLE18841CABEA24090&amp;index=10">[2]</a>:</p>
+<pre><code class="language-scheme">(define count 10)
+(define (count-down)
+  (set! count (- count 1))
+  count)
+
+(define a (cons 1 2))
+(define b (cons a a))
+(define a (cons 3 2))
+b ; = ?
+
+(define a (cons 1 2))
+(define b (cons a a))
+(set-car! a 3)
+b ; = ?
+</code></pre>
+<blockquote>
+<p>Explique o bug no procedimento <code>set-fact</code>.</p>
+</blockquote>
+<pre><code class="language-scheme">(define (fact n)
+  (let loop ((i 1) (p 1))
+    (if (&gt; i n) p
+        (loop (+ i 1) (* p i)))))
+
+(define (set-fact n)
+  (let ((i 1) (p 1))
+    (let loop ()
+      (if (&gt; i n) p
+          (begin
+            (set! i (+ i 1))
+            (set! p (* p i))
+            (loop))))))
+</code></pre>
+<h2><a class="header" href="#memoization-com-closures" id="memoization-com-closures"><em>Memoization</em> com <em>Closures</em></a></h2>
+<p>Se analisarmos a primeira definição do procedimento <code>fib</code>, percebemos que seu principal problema é a computação de resultados que já foram vistos e calculados anteriormente.
+Uma forma de contornar esse problema seria fazer com que o processo se lembre desses resultados parciais em um tipo de memória, evitando assim uma computação que pode vir a ser custosa.
+Essa técnica de <a href="https://en.wikipedia.org/wiki/Dynamic_programming">programação dinâmica</a> se chama <a href="https://en.wikipedia.org/wiki/Memoization"><em>memoization</em></a>.</p>
+<pre><code class="language-scheme">(define (fib n)
+  (display &quot;Computing Fib of &quot;) (display n) (newline)
+  (cond ((= n 0) 0)
+        ((= n 1) 1)
+        (else (+ (memo-fib (- n 1))
+                 (memo-fib (- n 2))))))
+
+(define cache (make-table))
+
+(define (memo-fib n)
+  (let ((hit? (lookup cache n)))
+    ;; hit or miss
+    (or hit?
+        (let ((result (fib n)))
+          (insert! cache n result)
+          result))))
+
+;; (clear-table! cache)
+</code></pre>
+<blockquote>
+<p>Scheme adota a convenção de sinalizar procedimentos que geram efeitos colaterais com o sufixo <code>!</code>. <br/></p>
+</blockquote>
+<pre><code class="language-scheme">(define (make-table)
+  (cons '*table* '()))
+
+(define (lookup table key)
+  (let ((record (assoc key (cdr table))))
+    (cond (record =&gt; cdr)
+          (else #f))))
+
+(define (insert! table key value)
+  (cond ((assoc key (cdr table)) =&gt; (lambda (record) (set-cdr! record value)))
+        (else (set-cdr! table
+                        (cons (cons key value) (cdr table)))))
+  'ok)
+
+(define (clear-table! table)
+  (set-cdr! table '())
+  'ok)
+
+; (define (assoc k a-list)
+;   (cond ((null? a-list) #f)
+;         ((equal? k (caar a-list)) (car a-list))
+;         (else (assoc k (cdr a-list)))))
+</code></pre>
+<blockquote>
+<p>Tomando a tabela apresentada como exemplo, tente implementar uma pilha (LIFO) com estado mutável.
+Depois, explique como fazer o mesmo através de programação puramente funcional.</p>
+</blockquote>
+<p>A estrutura de dados implementada é um exemplo de sistema cujos resultados dependem não somente das entradas dadas, mas também do seu estado interno.</p>
+<p>Perceba que a única coisa atrelada à sequência de Fibonacci no corpo de <code>memo-fib</code> é a chamada da função <code>fib</code>.
+Podemos generalizar essa ideia em uma função de alta ordem que retorna um <em>closure</em> contendo sua própria &quot;memória&quot;.</p>
+<pre><code class="language-scheme">(define (memoize proc)
+  (let ((cache (make-table)))
+    (define (delegate . args)
+      (let ((hit (lookup cache args)))
+        (or hit
+            (let ((result (apply proc args)))
+              (insert! cache args result)
+              result))))
+    delegate))
+</code></pre>
+<pre><code class="language-scheme">(define memo-fib (memoize
+  (lambda (n)
+    (display &quot;Computing Fib of &quot;) (display n) (newline)
+    (cond ((= n 0) 0)
+          ((= n 1) 1)
+          (else (+ (memo-fib (- n 1))
+                   (memo-fib (- n 2))))))))
+
+(define memo-sqrt (memoize sqrt))
+
+;; &lt;etc&gt;
+</code></pre>
+<p>Apesar de termos melhorado a performance do procedimento antes exponencial para linear, o fizemos em troca de memória da máquina.
+Além disso, o sistema de busca de resultados armazenados não é muito eficiente: se na avaliação de <code>(+ (memo-fib (- n 1)) (memo-fib (- n 2)))</code> as entradas na <em>cache</em> estiverem em ordem crescente, seria necessário varrer a lista do início até encontrar a chave <code>(- n 1)</code> e depois recomeçar o processo indo do ínicio da tabela até a entrada <code>(- n 2)</code>.</p>
+<p>Por causa de situações como estas, implementações sérias de Scheme provêm formas de utilizar estruturas de dados mais eficientes projetadas em outras linguagens.
+Em Guile, por exemplo, poderíamos utilizar uma <em>hashtable</em> para chegar o mais próximo possível de calcular um dado número de Fibonacci em tempo constante (supondo que já tenha sido pré-computado).</p>
+<pre><code class="language-scheme">;; GUILE
+(define make-table make-hash-table)
+(define lookup hash-ref)
+(define insert! hash-set!)
+</code></pre>
+<h2><a class="header" href="#objetos-dinâmicos" id="objetos-dinâmicos">Objetos Dinâmicos</a></h2>
+<p>No exemplo anterior utilizamos uma lista cujo estado interno era acessado e alterado através de funções auxiliares: os processos são totalmente <strong>orientados aos dados</strong> manipulados.</p>
+<p>A abordagem <strong>orientada a objetos</strong> em Scheme envolve a utilização de <em>closures</em> que têm acesso ao seu próprio estado e fornecem interfaces para interagir com o ambiente externo.</p>
+<pre><code class="language-scheme">(define (make-wrapper)
+  (let ((x 'void))
+    (define (setter! y)
+      (set! x y)
+      'ok)
+    (define (self method)
+      (cond ((eq? method 'get) x)
+            ((eq? method 'set) setter!)
+            (else (error &quot;Undefined operation&quot; method))))
+    self))
+
+(define (get-value w)
+  (w 'get))
+
+(define (set-value! w x)
+  ((w 'set) x))
+</code></pre>
+<p>Nesse exemplo, ao passar a mensagem <code>'set</code> a um objeto criado por <code>make-wrapper</code> o mesmo retorna um procedimento que alterará seu estado interno quando chamado.</p>
+<p>Assim, podemos formar sistemas como conjuntos de objetos intercomunicantes.
+Note que agora o fluxo de dados não têm sentido único, podendo se propagar de qualquer forma em uma rede de objetos conectados arbitrariamente.</p>
+<p>Uma aplicação desse tipo de sistema é encontrada em equações algébricas.
+Por exemplo, a equação \( F = \frac{9}{5} * C + 32 \) determina a relação entre temperaturas das escalas Celsius e Fahrenheit.</p>
+<pre><code class="language-scheme">(define (c2f x)
+  (+ (* (/ 9 5) x) 32))
+</code></pre>
+<p>Esse procedimento representa apenas um sentido da igualdade, visto que não permite calcular a temperatura em Celsius dado uma em Fahrenheit.
+O mesmo se aplicaria se fossêmos representar a relação da lei de Ohm.</p>
+<p>\[ I = \frac{V}{R}  \Leftrightarrow  V = R * I  \Leftrightarrow  R = \frac{V}{I} \]</p>
+<p>A mesma deve valer para quaisquer valores de corrente, resistência e tensão, onde uma alteração de um lado da igualdade será propagada pela equação e causará uma mudança no lado oposto.
+Portanto, visamos modelar equações algébricas através de um <a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.5">sistema de propagação de restrições</a>.
+Para isso, vamo inserir em Scheme uma linguagem que trata de conectores e operadores.</p>
+<pre><code class="language-scheme">(define (make-connector)
+  (let ((value #f)
+        (informant #f)
+        (constraints '()))
+    (define (set-my-value newval source)
+      (cond ((not (has-value? self))
+             (set! value newval)
+             (set! informant source)
+             (for-each-except source
+                              inform-about-value
+                              constraints))
+            ((not (= value newval))
+             (error &quot;Contradiction&quot; (list value newval)))
+            (else 'ignored)))
+    (define (forget-my-value retractor)
+      (if (eq? retractor informant)
+          (begin
+            (set! informant #f)
+            (for-each-except retractor
+                             inform-about-no-value
+                             constraints))
+          'ignored))
+    (define (connect new-constraint)
+      (if (not (memq new-constraint constraints))
+          (set! constraints
+                (cons new-constraint constraints)))
+      (if (has-value? self)
+          (inform-about-value new-constraint))
+      'done)
+    (define (self request)
+      (cond ((eq? request 'has-value?) informant)
+            ((eq? request 'value) value)
+            ((eq? request 'set-value!) set-my-value)
+            ((eq? request 'forget) forget-my-value)
+            ((eq? request 'connect) connect)
+            (else (error &quot;Unknown request -- CONNECTOR&quot; request))))
+    self))
+
+(define (for-each-except exception procedure list)
+  (let loop ((items list))
+    (cond ((null? items) 'done)
+          ((eq? (car items) exception) (loop (cdr items)))
+          (else
+           (procedure (car items))
+           (loop (cdr items))))))
+
+(define (has-value? connector)
+  (if (connector 'has-value?) #t #f))
+(define (get-value connector)
+  (connector 'value))
+(define (set-value! connector new-value informant)
+  ((connector 'set-value!) new-value informant))
+(define (forget-value! connector retractor)
+  ((connector 'forget) retractor))
+(define (connect connector new-constraint)
+  ((connector 'connect) new-constraint))
+
+(define (inform-about-value constraint)
+  (constraint 'I-have-a-value))
+(define (inform-about-no-value constraint)
+  (constraint 'I-lost-my-value))
+
+(define (constant value connector)
+  (define (self request)
+    (error &quot;Unknown request -- CONSTANT&quot; request))
+  (connect connector self)
+  (set-value! connector value self)
+  self)
+
+(define (adder a1 a2 sum)
+  (define (process-new-value)
+    (cond ((and (has-value? a1) (has-value? a2))
+           (set-value! sum
+                       (+ (get-value a1) (get-value a2))
+                       self))
+          ((and (has-value? a1) (has-value? sum))
+           (set-value! a2
+                       (- (get-value sum) (get-value a1))
+                       self))
+          ((and (has-value? a2) (has-value? sum))
+           (set-value! a1
+                       (- (get-value sum) (get-value a2))
+                       self))))
+  (define (process-forget-value)
+    (forget-value! sum self)
+    (forget-value! a1 self)
+    (forget-value! a2 self)
+    (process-new-value))
+  (define (self request)
+    (cond ((eq? request 'I-have-a-value) (process-new-value))
+          ((eq? request 'I-lost-my-value) (process-forget-value))
+          (else (error &quot;Unknown request -- ADDER&quot; request))))
+  (connect a1 self)
+  (connect a2 self)
+  (connect sum self)
+  self)
+
+(define (multiplier m1 m2 product)
+  (define (process-new-value)
+    (cond ((or (and (has-value? m1) (= (get-value m1) 0))
+               (and (has-value? m2) (= (get-value m2) 0)))
+           (set-value! product 0 self))
+          ((and (has-value? m1) (has-value? m2))
+           (set-value! product
+                       (* (get-value m1) (get-value m2))
+                       self))
+          ((and (has-value? product) (has-value? m1))
+           (set-value! m2
+                       (/ (get-value product) (get-value m1))
+                       self))
+          ((and (has-value? product) (has-value? m2))
+           (set-value! m1
+                       (/ (get-value product) (get-value m2))
+                       self))))
+  (define (process-forget-value)
+    (forget-value! product self)
+    (forget-value! m1 self)
+    (forget-value! m2 self)
+    (process-new-value))
+  (define (self request)
+    (cond ((eq? request 'I-have-a-value) (process-new-value))
+          ((eq? request 'I-lost-my-value) (process-forget-value))
+          (else (error &quot;Unknown request -- MULTIPLIER&quot; request))))
+  (connect m1 self)
+  (connect m2 self)
+  (connect product self)
+  self)
+
+(define (probe name connector)
+  (define (print-probe value)
+    (display name)
+    (display &quot; = &quot;)
+    (display value)
+    (newline))
+  (define (process-new-value)
+    (print-probe (get-value connector)))
+  (define (process-forget-value)
+    (print-probe &quot;?&quot;))
+  (define (self request)
+    (cond ((eq? request 'I-have-a-value) (process-new-value))
+          ((eq? request 'I-lost-my-value) (process-forget-value))
+          (else (error &quot;Unknown request -- PROBE&quot; request))))
+  (connect connector self)
+  self)
+
+(define (c+ x y)
+  (let ((z (make-connector)))
+    (adder x y z)
+    z))
+
+(define (c* x y)
+  (let ((z (make-connector)))
+    (multiplier x y z)
+    z))
+
+(define (cv val)
+  (let ((c (make-connector)))
+    (constant val c)
+    c))
+
+(define (c- x y)
+  (let ((z (make-connector)))
+    (adder z y x)
+    z))
+
+(define (c/ x y)
+  (let ((z (make-connector)))
+    (multiplier z y x)
+    z))
+</code></pre>
+<p>Finalmente, para utilizar o sistema:</p>
+<pre><code class="language-scheme">(define (celsius-fahrenheit-converter x)
+  (c+ (c* (c/ (cv 9) (cv 5)) x) (cv 32)))
+
+(define c (make-connector))
+(probe &quot;Celsius&quot; c)
+
+(define f (celsius-fahrenheit-converter c))
+(probe &quot;Fahrenheit&quot; f)
+
+(set-value! c 100 'user)
+
+
+(define (ohms-law v r) (c/ v r))
+
+(define v (make-connector))
+(probe &quot;Voltage&quot; v)
+
+(define r (make-connector))
+(probe &quot;Resistance&quot; r)
+
+(define i (ohms-law v r))
+(probe &quot;Current&quot; i)
+</code></pre>
+<h2><a class="header" href="#lazy-streams-no-infinito" id="lazy-streams-no-infinito"><em>Lazy Streams</em> no Infinito</a></h2>
+<p>Tendo observado outros tipos de sistemas, voltemos aos unidirecionais com o intuito de explorar esse paradigma de fluxo de dados: se um programa consiste no encadeamento de funções puras, não importa o momento em que um valor intermediário é computado, desde que quando o resultado final seja requisitado ele se faça presente.
+Sistemas assim podem se dar ao luxo de serem &quot;preguiçosos&quot;, adiando ao máximo o instante em que realizarão uma computação.</p>
+<blockquote>
+<p>Computadores, assim como pessoas, tentam adiar ao máximo possível a ocorrência de eventos desagradáveis.
+(<a href="https://en.wikipedia.org/wiki/Modern_Operating_Systems">Tanenbaum, 2011</a>)</p>
+</blockquote>
+<p>A seguir implementaremos um tipo de lista que segue essa ideia de <a href="https://en.wikipedia.org/wiki/Lazy_evaluation"><em>lazy evaluation</em></a>.
+Os principais procedimentos pelos quais essas &quot;listas preguiçosas&quot; serão manipuladas estão descritos abaixo.</p>
+<pre><code class="language-scheme">(define (stream-ref seq n)
+  (cond ((empty? seq) #f)
+        ((&lt;= n 0) (head seq))
+        (else (stream-ref (tail seq) (- n 1)))))
+
+(define (stream-for-each proc seq)
+  (if (not (empty? seq))
+      (begin
+        (proc (head seq))
+        (stream-for-each proc (tail seq)))))
+
+(define (stream-map proc seq)
+  (if (empty? seq) empty-stream
+      (stream (proc (head seq))
+              (stream-map proc (tail seq)))))
+
+(define (stream-filter pred seq)
+  (cond ((empty? seq) empty-stream)
+        ((pred (head seq)) (stream (head seq)
+                                   (stream-filter pred (tail seq))))
+        (else (stream-filter pred (tail seq)))))
+
+(define (stream-foldr op acc seq) ;; aka reduce
+  (if (empty? seq) acc
+      (op (head seq)
+          (stream-foldr op acc (tail seq)))))
+
+(define (stream-zip-with op sa sb)
+  (stream (op (head sa) (head sb))
+          (stream-zip-with op (tail sa) (tail sb))))
+</code></pre>
+<blockquote>
+<p>Construa um procedimento <code>(stream-range lo hi)</code> que gera uma stream com todos os inteiros entre <code>lo</code> e <code>hi</code>.</p>
+</blockquote>
+<p>As primitivas que constroem e acessam as <em>streams</em> são responsáveis por diferenciá-las de listas normais.</p>
+<pre><code class="language-scheme">(define (memo-proc proc)
+  (let ((run? #f)
+        (cached '()))
+    (lambda ()
+      (if run? cached
+          (let ((result (proc)))
+            (begin
+              (set! run? #t)
+              (set! cached result)
+              result))))))
+
+;; delay
+(define-syntax lazy
+  (syntax-rules ()
+    ((lazy expr)
+      (memo-proc (lambda () expr)))))
+
+;; force
+(define (thunk p) (p))
+
+(define-syntax stream
+  (syntax-rules ()
+    ((stream x y)
+      (cons x (lazy y)))))
+
+(define (head s) (car s))
+(define (tail s) (thunk (cdr s)))
+(define (empty? s) (null? s))
+(define empty-stream '())
+</code></pre>
+<p>As <a href="http://ds26gte.github.io/tyscheme/index-Z-H-10.html">macros</a> <code>stream</code> e <code>lazy</code> definem transformações que ocorrem no código antes da sua interpretação.
+Assim, uma <em>stream</em> consiste num par onde a computação do segundo elemento foi postergada, deixando apenas uma promessa de que estará lá quando for necessária.
+Se um elemento de uma <em>stream</em> nunca for acessado, a promessa não precisa ser cumprida e nenhum processamento é efetuado.</p>
+<p>Note que esse mecanismo permite representar sequências infinitas: todos os elementos estarão presentes, mas só existirão de fato quando alguém requisitar.</p>
+<pre><code class="language-scheme">(define (ints-from n)
+  (stream n (ints-from (+ n 1))))
+
+(define (sieve seq) ;; crivo de Eratostenes
+  (define (divisible? a b)
+    (= 0 (remainder a b)))
+  (if (empty? seq) seq
+      (stream (head seq)
+              (sieve (stream-filter (lambda (x) (not (divisible? x (head seq))))
+                                    (tail seq))))))
+
+(define primes (sieve (ints-from 2)))
+</code></pre>
+<p>Podemos afirmar, portanto, que <code>primes</code> é a <em>stream</em> de todos os números primos.</p>
+<p>O esquema pode ser aplicado também para séries infinitas, por exemplo na <a href="https://en.wikipedia.org/wiki/Taylor_series">série de Taylor-Maclaurin</a> para o arco tangente</p>
+<p>\[ \arctan x = x - \frac{x^3}{3} + \frac{x^5}{5} - \frac{x^7}{7} + ... \]</p>
+<pre><code class="language-scheme">(define (arctan-series x n)
+  (stream (/ (expt x n) n)
+          (stream-map - (arctan-series x (+ n 2)))))
+</code></pre>
+<blockquote>
+<p>Podemos substituir x=1 para poder encontrar a <a href="https://en.wikipedia.org/wiki/Madhava_series">fórmula de Madhava</a> para aproximar o valor de \( \pi \):</p>
+<p>\[ \arctan 1 = \frac{\pi}{4} = 1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + ... \]</p>
+<p>Tente gerar uma <em>stream</em> contendo as aproximações de pi pela fórmula anterior, onde cada n-ésimo elemento equivale à soma parcial de n termos da série.</p>
+</blockquote>
+<pre><code class="language-scheme">(define (partial-sums s)
+  (stream-zip-with + s (stream 0 (partial-sums s))))
+
+(define pi-approximations
+  (stream-map (lambda (pi/4) (* 4 pi/4))
+              (partial-sums (arctan-series 1.0 1))))
+</code></pre>
+<blockquote>
+<p>Por fim, vamos obter a sequência de Fibonacci completa em uma <em>stream</em> infinita.</p>
+</blockquote>
+<pre><code class="language-scheme">(define (fibonacci-sequence prev curr)
+  (stream prev
+          (fibonacci-sequence curr (+ prev curr))))
+
+(define fibs (fibonacci-sequence 0 1))
+</code></pre>
+<blockquote>
+<p>Reflita sobre a possibilidade de computar elementos de uma <em>lazy stream</em> paralelamente com técnicas de programação concorrente.
+Você pode discutir suas ideias na <a href="./discussion.html">seção de comentários</a> desse site.</p>
+</blockquote>
+<h2><a class="header" href="#memoization-com-closures-1" id="memoization-com-closures-1"><em>Memoization</em> com <em>Closures</em></a></h2>
+<p>Se analisarmos a primeira definição do procedimento <code>fib</code>, percebemos que seu principal problema é a computação de resultados que já foram vistos e calculados anteriormente.
+Uma forma de contornar esse problema seria fazer com que o processo se lembre desses resultados parciais em um tipo de memória, evitando assim uma computação que pode vir a ser custosa.
+Essa técnica de <a href="https://en.wikipedia.org/wiki/Dynamic_programming">programação dinâmica</a> se chama <a href="https://en.wikipedia.org/wiki/Memoization"><em>memoization</em></a>.</p>
+<pre><code class="language-scheme">(define (fib n)
+  (display &quot;Computing Fib of &quot;) (display n) (newline)
+  (cond ((= n 0) 0)
+        ((= n 1) 1)
+        (else (+ (memo-fib (- n 1))
+                 (memo-fib (- n 2))))))
+
+(define cache (make-table))
+
+(define (memo-fib n)
+  (let ((hit? (lookup cache n)))
+    ;; hit or miss
+    (or hit?
+        (let ((result (fib n)))
+          (insert! cache n result)
+          result))))
+
+;; (clear-table! cache)
+</code></pre>
+<blockquote>
+<p>Scheme adota a convenção de sinalizar procedimentos que geram efeitos colaterais com o sufixo <code>!</code>. <br/></p>
+</blockquote>
+<pre><code class="language-scheme">(define (make-table)
+  (cons '*table* '()))
+
+(define (lookup table key)
+  (let ((record (assoc key (cdr table))))
+    (cond (record =&gt; cdr)
+          (else #f))))
+
+(define (insert! table key value)
+  (cond ((assoc key (cdr table)) =&gt; (lambda (record) (set-cdr! record value)))
+        (else (set-cdr! table
+                        (cons (cons key value) (cdr table)))))
+  'ok)
+
+(define (clear-table! table)
+  (set-cdr! table '())
+  'ok)
+
+; (define (assoc k a-list)
+;   (cond ((null? a-list) #f)
+;         ((equal? k (caar a-list)) (car a-list))
+;         (else (assoc k (cdr a-list)))))
+</code></pre>
+<blockquote>
+<p>Tomando a tabela apresentada como exemplo, tente implementar uma pilha (LIFO) com estado mutável.
+Depois, explique como fazer o mesmo através de programação puramente funcional.</p>
+</blockquote>
+<p>A estrutura de dados implementada é um exemplo de sistema cujos resultados dependem não somente das entradas dadas, mas também do seu estado interno.</p>
+<p>Perceba que a única coisa atrelada à sequência de Fibonacci no corpo de <code>memo-fib</code> é a chamada da função <code>fib</code>.
+Podemos generalizar essa ideia em uma função de alta ordem que retorna um <em>closure</em> contendo sua própria &quot;memória&quot;.</p>
+<pre><code class="language-scheme">(define (memoize proc)
+  (let ((cache (make-table)))
+    (define (delegate . args)
+      (let ((hit (lookup cache args)))
+        (or hit
+            (let ((result (apply proc args)))
+              (insert! cache args result)
+              result))))
+    delegate))
+</code></pre>
+<pre><code class="language-scheme">(define memo-fib (memoize
+  (lambda (n)
+    (display &quot;Computing Fib of &quot;) (display n) (newline)
+    (cond ((= n 0) 0)
+          ((= n 1) 1)
+          (else (+ (memo-fib (- n 1))
+                   (memo-fib (- n 2))))))))
+
+(define memo-sqrt (memoize sqrt))
+
+;; &lt;etc&gt;
+</code></pre>
+<p>Apesar de termos melhorado a performance do procedimento antes exponencial para linear, o fizemos em troca de memória da máquina.
+Além disso, o sistema de busca de resultados armazenados não é muito eficiente: se na avaliação de <code>(+ (memo-fib (- n 1)) (memo-fib (- n 2)))</code> as entradas na <em>cache</em> estiverem em ordem crescente, seria necessário varrer a lista do início até encontrar a chave <code>(- n 1)</code> e depois recomeçar o processo indo do ínicio da tabela até a entrada <code>(- n 2)</code>.</p>
+<p>Por causa de situações como estas, implementações sérias de Scheme provêm formas de utilizar estruturas de dados mais eficientes projetadas em outras linguagens.
+Em Guile, por exemplo, poderíamos utilizar uma <em>hashtable</em> para chegar o mais próximo possível de calcular um dado número de Fibonacci em tempo constante (supondo que já tenha sido pré-computado).</p>
+<pre><code class="language-scheme">;; GUILE
+(define make-table make-hash-table)
+(define lookup hash-ref)
+(define insert! hash-set!)
+</code></pre>
+<h2><a class="header" href="#objetos-dinâmicos-1" id="objetos-dinâmicos-1">Objetos Dinâmicos</a></h2>
+<p>No exemplo anterior utilizamos uma lista cujo estado interno era acessado e alterado através de funções auxiliares: os processos são totalmente <strong>orientados aos dados</strong> manipulados.</p>
+<p>A abordagem <strong>orientada a objetos</strong> em Scheme envolve a utilização de <em>closures</em> que têm acesso ao seu próprio estado e fornecem interfaces para interagir com o ambiente externo.</p>
+<pre><code class="language-scheme">(define (make-wrapper)
+  (let ((x 'void))
+    (define (setter! y)
+      (set! x y)
+      'ok)
+    (define (self method)
+      (cond ((eq? method 'get) x)
+            ((eq? method 'set) setter!)
+            (else (error &quot;Undefined operation&quot; method))))
+    self))
+
+(define (get-value w)
+  (w 'get))
+
+(define (set-value! w x)
+  ((w 'set) x))
+</code></pre>
+<p>Nesse exemplo, ao passar a mensagem <code>'set</code> a um objeto criado por <code>make-wrapper</code> o mesmo retorna um procedimento que alterará seu estado interno quando chamado.</p>
+<p>Assim, podemos formar sistemas como conjuntos de objetos intercomunicantes.
+Note que agora o fluxo de dados não têm sentido único, podendo se propagar de qualquer forma em uma rede de objetos conectados arbitrariamente.</p>
+<p>Uma aplicação desse tipo de sistema é encontrada em equações algébricas.
+Por exemplo, a equação \( F = \frac{9}{5} * C + 32 \) determina a relação entre temperaturas das escalas Celsius e Fahrenheit.</p>
+<pre><code class="language-scheme">(define (c2f x)
+  (+ (* (/ 9 5) x) 32))
+</code></pre>
+<p>Esse procedimento representa apenas um sentido da igualdade, visto que não permite calcular a temperatura em Celsius dado uma em Fahrenheit.
+O mesmo se aplicaria se fossêmos representar a relação da lei de Ohm.</p>
+<p>\[ I = \frac{V}{R}  \Leftrightarrow  V = R * I  \Leftrightarrow  R = \frac{V}{I} \]</p>
+<p>A mesma deve valer para quaisquer valores de corrente, resistência e tensão, onde uma alteração de um lado da igualdade será propagada pela equação e causará uma mudança no lado oposto.
+Portanto, visamos modelar equações algébricas através de um <a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-22.html#%_sec_3.3.5">sistema de propagação de restrições</a>.
+Para isso, vamo inserir em Scheme uma linguagem que trata de conectores e operadores.</p>
+<pre><code class="language-scheme">(define (make-connector)
+  (let ((value #f)
+        (informant #f)
+        (constraints '()))
+    (define (set-my-value newval source)
+      (cond ((not (has-value? self))
+             (set! value newval)
+             (set! informant source)
+             (for-each-except source
+                              inform-about-value
+                              constraints))
+            ((not (= value newval))
+             (error &quot;Contradiction&quot; (list value newval)))
+            (else 'ignored)))
+    (define (forget-my-value retractor)
+      (if (eq? retractor informant)
+          (begin
+            (set! informant #f)
+            (for-each-except retractor
+                             inform-about-no-value
+                             constraints))
+          'ignored))
+    (define (connect new-constraint)
+      (if (not (memq new-constraint constraints))
+          (set! constraints
+                (cons new-constraint constraints)))
+      (if (has-value? self)
+          (inform-about-value new-constraint))
+      'done)
+    (define (self request)
+      (cond ((eq? request 'has-value?) informant)
+            ((eq? request 'value) value)
+            ((eq? request 'set-value!) set-my-value)
+            ((eq? request 'forget) forget-my-value)
+            ((eq? request 'connect) connect)
+            (else (error &quot;Unknown request -- CONNECTOR&quot; request))))
+    self))
+
+(define (for-each-except exception procedure list)
+  (let loop ((items list))
+    (cond ((null? items) 'done)
+          ((eq? (car items) exception) (loop (cdr items)))
+          (else
+           (procedure (car items))
+           (loop (cdr items))))))
+
+(define (has-value? connector)
+  (if (connector 'has-value?) #t #f))
+(define (get-value connector)
+  (connector 'value))
+(define (set-value! connector new-value informant)
+  ((connector 'set-value!) new-value informant))
+(define (forget-value! connector retractor)
+  ((connector 'forget) retractor))
+(define (connect connector new-constraint)
+  ((connector 'connect) new-constraint))
+
+(define (inform-about-value constraint)
+  (constraint 'I-have-a-value))
+(define (inform-about-no-value constraint)
+  (constraint 'I-lost-my-value))
+
+(define (constant value connector)
+  (define (self request)
+    (error &quot;Unknown request -- CONSTANT&quot; request))
+  (connect connector self)
+  (set-value! connector value self)
+  self)
+
+(define (adder a1 a2 sum)
+  (define (process-new-value)
+    (cond ((and (has-value? a1) (has-value? a2))
+           (set-value! sum
+                       (+ (get-value a1) (get-value a2))
+                       self))
+          ((and (has-value? a1) (has-value? sum))
+           (set-value! a2
+                       (- (get-value sum) (get-value a1))
+                       self))
+          ((and (has-value? a2) (has-value? sum))
+           (set-value! a1
+                       (- (get-value sum) (get-value a2))
+                       self))))
+  (define (process-forget-value)
+    (forget-value! sum self)
+    (forget-value! a1 self)
+    (forget-value! a2 self)
+    (process-new-value))
+  (define (self request)
+    (cond ((eq? request 'I-have-a-value) (process-new-value))
+          ((eq? request 'I-lost-my-value) (process-forget-value))
+          (else (error &quot;Unknown request -- ADDER&quot; request))))
+  (connect a1 self)
+  (connect a2 self)
+  (connect sum self)
+  self)
+
+(define (multiplier m1 m2 product)
+  (define (process-new-value)
+    (cond ((or (and (has-value? m1) (= (get-value m1) 0))
+               (and (has-value? m2) (= (get-value m2) 0)))
+           (set-value! product 0 self))
+          ((and (has-value? m1) (has-value? m2))
+           (set-value! product
+                       (* (get-value m1) (get-value m2))
+                       self))
+          ((and (has-value? product) (has-value? m1))
+           (set-value! m2
+                       (/ (get-value product) (get-value m1))
+                       self))
+          ((and (has-value? product) (has-value? m2))
+           (set-value! m1
+                       (/ (get-value product) (get-value m2))
+                       self))))
+  (define (process-forget-value)
+    (forget-value! product self)
+    (forget-value! m1 self)
+    (forget-value! m2 self)
+    (process-new-value))
+  (define (self request)
+    (cond ((eq? request 'I-have-a-value) (process-new-value))
+          ((eq? request 'I-lost-my-value) (process-forget-value))
+          (else (error &quot;Unknown request -- MULTIPLIER&quot; request))))
+  (connect m1 self)
+  (connect m2 self)
+  (connect product self)
+  self)
+
+(define (probe name connector)
+  (define (print-probe value)
+    (display name)
+    (display &quot; = &quot;)
+    (display value)
+    (newline))
+  (define (process-new-value)
+    (print-probe (get-value connector)))
+  (define (process-forget-value)
+    (print-probe &quot;?&quot;))
+  (define (self request)
+    (cond ((eq? request 'I-have-a-value) (process-new-value))
+          ((eq? request 'I-lost-my-value) (process-forget-value))
+          (else (error &quot;Unknown request -- PROBE&quot; request))))
+  (connect connector self)
+  self)
+
+(define (c+ x y)
+  (let ((z (make-connector)))
+    (adder x y z)
+    z))
+
+(define (c* x y)
+  (let ((z (make-connector)))
+    (multiplier x y z)
+    z))
+
+(define (cv val)
+  (let ((c (make-connector)))
+    (constant val c)
+    c))
+
+(define (c- x y)
+  (let ((z (make-connector)))
+    (adder z y x)
+    z))
+
+(define (c/ x y)
+  (let ((z (make-connector)))
+    (multiplier z y x)
+    z))
+</code></pre>
+<p>Finalmente, para utilizar o sistema:</p>
+<pre><code class="language-scheme">(define (celsius-fahrenheit-converter x)
+  (c+ (c* (c/ (cv 9) (cv 5)) x) (cv 32)))
+
+(define c (make-connector))
+(probe &quot;Celsius&quot; c)
+
+(define f (celsius-fahrenheit-converter c))
+(probe &quot;Fahrenheit&quot; f)
+
+(set-value! c 100 'user)
+
+
+(define (ohms-law v r) (c/ v r))
+
+(define v (make-connector))
+(probe &quot;Voltage&quot; v)
+
+(define r (make-connector))
+(probe &quot;Resistance&quot; r)
+
+(define i (ohms-law v r))
+(probe &quot;Current&quot; i)
+</code></pre>
+<h2><a class="header" href="#lazy-streams-no-infinito-1" id="lazy-streams-no-infinito-1"><em>Lazy Streams</em> no Infinito</a></h2>
+<p>Tendo observado outros tipos de sistemas, voltemos aos unidirecionais com o intuito de explorar esse paradigma de fluxo de dados: se um programa consiste no encadeamento de funções puras, não importa o momento em que um valor intermediário é computado, desde que quando o resultado final seja requisitado ele se faça presente.
+Sistemas assim podem se dar ao luxo de serem &quot;preguiçosos&quot;, adiando ao máximo o instante em que realizarão uma computação.</p>
+<blockquote>
+<p>Computadores, assim como pessoas, tentam adiar ao máximo possível a ocorrência de eventos desagradáveis.
+(<a href="https://en.wikipedia.org/wiki/Modern_Operating_Systems">Tanenbaum, 2011</a>)</p>
+</blockquote>
+<p>A seguir implementaremos um tipo de lista que segue essa ideia de <a href="https://en.wikipedia.org/wiki/Lazy_evaluation"><em>lazy evaluation</em></a>.
+Os principais procedimentos pelos quais essas &quot;listas preguiçosas&quot; serão manipuladas estão descritos abaixo.</p>
+<pre><code class="language-scheme">(define (stream-ref seq n)
+  (cond ((empty? seq) #f)
+        ((&lt;= n 0) (head seq))
+        (else (stream-ref (tail seq) (- n 1)))))
+
+(define (stream-for-each proc seq)
+  (if (not (empty? seq))
+      (begin
+        (proc (head seq))
+        (stream-for-each proc (tail seq)))))
+
+(define (stream-map proc seq)
+  (if (empty? seq) empty-stream
+      (stream (proc (head seq))
+              (stream-map proc (tail seq)))))
+
+(define (stream-filter pred seq)
+  (cond ((empty? seq) empty-stream)
+        ((pred (head seq)) (stream (head seq)
+                                   (stream-filter pred (tail seq))))
+        (else (stream-filter pred (tail seq)))))
+
+(define (stream-foldr op acc seq) ;; aka reduce
+  (if (empty? seq) acc
+      (op (head seq)
+          (stream-foldr op acc (tail seq)))))
+
+(define (stream-zip-with op sa sb)
+  (stream (op (head sa) (head sb))
+          (stream-zip-with op (tail sa) (tail sb))))
+</code></pre>
+<blockquote>
+<p>Construa um procedimento <code>(stream-range lo hi)</code> que gera uma stream com todos os inteiros entre <code>lo</code> e <code>hi</code>.</p>
+</blockquote>
+<p>As primitivas que constroem e acessam as <em>streams</em> são responsáveis por diferenciá-las de listas normais.</p>
+<pre><code class="language-scheme">(define (memo-proc proc)
+  (let ((run? #f)
+        (cached '()))
+    (lambda ()
+      (if run? cached
+          (let ((result (proc)))
+            (begin
+              (set! run? #t)
+              (set! cached result)
+              result))))))
+
+;; delay
+(define-syntax lazy
+  (syntax-rules ()
+    ((lazy expr)
+      (memo-proc (lambda () expr)))))
+
+;; force
+(define (thunk p) (p))
+
+(define-syntax stream
+  (syntax-rules ()
+    ((stream x y)
+      (cons x (lazy y)))))
+
+(define (head s) (car s))
+(define (tail s) (thunk (cdr s)))
+(define (empty? s) (null? s))
+(define empty-stream '())
+</code></pre>
+<p>As <a href="http://ds26gte.github.io/tyscheme/index-Z-H-10.html">macros</a> <code>stream</code> e <code>lazy</code> definem transformações que ocorrem no código antes da sua interpretação.
+Assim, uma <em>stream</em> consiste num par onde a computação do segundo elemento foi postergada, deixando apenas uma promessa de que estará lá quando for necessária.
+Se um elemento de uma <em>stream</em> nunca for acessado, a promessa não precisa ser cumprida e nenhum processamento é efetuado.</p>
+<p>Note que esse mecanismo permite representar sequências infinitas: todos os elementos estarão presentes, mas só existirão de fato quando alguém requisitar.</p>
+<pre><code class="language-scheme">(define (ints-from n)
+  (stream n (ints-from (+ n 1))))
+
+(define (sieve seq) ;; crivo de Eratostenes
+  (define (divisible? a b)
+    (= 0 (remainder a b)))
+  (if (empty? seq) seq
+      (stream (head seq)
+              (sieve (stream-filter (lambda (x) (not (divisible? x (head seq))))
+                                    (tail seq))))))
+
+(define primes (sieve (ints-from 2)))
+</code></pre>
+<p>Podemos afirmar, portanto, que <code>primes</code> é a <em>stream</em> de todos os números primos.</p>
+<p>O esquema pode ser aplicado também para séries infinitas, por exemplo na <a href="https://en.wikipedia.org/wiki/Taylor_series">série de Taylor-Maclaurin</a> para o arco tangente</p>
+<p>\[ \arctan x = x - \frac{x^3}{3} + \frac{x^5}{5} - \frac{x^7}{7} + ... \]</p>
+<pre><code class="language-scheme">(define (arctan-series x n)
+  (stream (/ (expt x n) n)
+          (stream-map - (arctan-series x (+ n 2)))))
+</code></pre>
+<blockquote>
+<p>Podemos substituir x=1 para poder encontrar a <a href="https://en.wikipedia.org/wiki/Madhava_series">fórmula de Madhava</a> para aproximar o valor de \( \pi \):</p>
+<p>\[ \arctan 1 = \frac{\pi}{4} = 1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + ... \]</p>
+<p>Tente gerar uma <em>stream</em> contendo as aproximações de pi pela fórmula anterior, onde cada n-ésimo elemento equivale à soma parcial de n termos da série.</p>
+</blockquote>
+<pre><code class="language-scheme">(define (partial-sums s)
+  (stream-zip-with + s (stream 0 (partial-sums s))))
+
+(define pi-approximations
+  (stream-map (lambda (pi/4) (* 4 pi/4))
+              (partial-sums (arctan-series 1.0 1))))
+</code></pre>
+<blockquote>
+<p>Por fim, vamos obter a sequência de Fibonacci completa em uma <em>stream</em> infinita.</p>
+</blockquote>
+<pre><code class="language-scheme">(define (fibonacci-sequence prev curr)
+  (stream prev
+          (fibonacci-sequence curr (+ prev curr))))
+
+(define fibs (fibonacci-sequence 0 1))
+</code></pre>
+<blockquote>
+<p>Reflita sobre a possibilidade de computar elementos de uma <em>lazy stream</em> paralelamente com técnicas de programação concorrente.
+Você pode discutir suas ideias na <a href="./discussion.html">seção de comentários</a> desse site.</p>
+</blockquote>
+<h1><a class="header" href="#esse-é-o-fim" id="esse-é-o-fim">Esse é o fim</a></h1>
+<blockquote>
+<p>Ou talvez seja apenas um início.</p>
+</blockquote>
+<p>Os interessados podem continuar seu aprendizado com os tópicos não abordados nessa oficina mas que também são ferramentas muito úteis presentes em Scheme.
+Para citar algumas:</p>
+<ul>
+<li><a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html">Interpretadores Metacirculares</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Hygienic_macro">Macros Higiênicas</a></li>
+<li><a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-28.html">Computação Não-Determinística</a></li>
+<li><a href="http://community.schemewiki.org/?call-with-current-continuation"><em>First-class Continuations</em></a></li>
+<li><a href="https://www.gnu.org/software/guile/manual/html_node/Threads.html"><em>Threads</em> e Concorrência</a></li>
+</ul>
+<h2><a class="header" href="#agradecimentos" id="agradecimentos">Agradecimentos</a></h2>
+<p><img src="./img/sussman.png" alt="Grand Wizard GJ Sussman" />
+<img src="./img/abelson.png" alt="Grand Wizard H Abelson" /></p>
+<h2><a class="header" href="#scripts-anexos" id="scripts-anexos">Scripts Anexos</a></h2>
+<p>Os trechos de código utilizados na oficina podem ser encontrados no meu <a href="https://github.com/baioc/baioc.github.io/tree/master/seccom-scheme/src/scm">repositório do GitHub</a>.</p>
+<h2><a class="header" href="#discussão-e-comentários" id="discussão-e-comentários">Discussão e Comentários</a></h2>
+<p>Podem utilizar o espaço abaixo para tirar dúvidas e discutir implementações, assim como apontar quaisquer erros no conteúdo.</p>
+<p>Sinta-se também à vontade para deixar sua opinião sobre a oficina, elogiando ou criticando de forma construtiva.</p>
+<div id="disqus_thread"></div>
+<script>
+    /** https://disqus.com/admin/universalcode/#configuration-variables */
+    var disqus_config = function () {
+        this.page.url = 'https://baioc.github.io/scheme/discussion.html'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = '{{content_id}}'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://baioc.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+        
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            MathJax.Hub.Register.StartupHook('End', function() {
+                window.setTimeout(window.print, 100);
+            });
+        });
+        </script>
+        
+        
+
+    </body>
+</html>

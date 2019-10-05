@@ -1,0 +1,383 @@
+<!DOCTYPE HTML>
+<html lang="pt-BR" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Computando com Scheme - ((Functional (Scheme)) Maths)</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Oficina de Matemática Funcional em Scheme da SECCOM UFSC 2019">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
+    </head>
+    <body class="navy">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = "navy";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="about.html"><strong aria-hidden="true">1.</strong> Sobre a Oficina</a></li><li><ol class="section"><li><a href="bib.html"><strong aria-hidden="true">1.1.</strong> Bibliografia</a></li></ol></li><li><a href="intro.html" class="active"><strong aria-hidden="true">2.</strong> Computando com Scheme</a></li><li><ol class="section"><li><a href="lang.html"><strong aria-hidden="true">2.1.</strong> Sobre Linguagens</a></li><li><a href="eg.html"><strong aria-hidden="true">2.2.</strong> Introdução à Scheme</a></li></ol></li><li><a href="recursion.html"><strong aria-hidden="true">3.</strong> Repetição via Recursão</a></li><li><ol class="section"><li><a href="rec.html"><strong aria-hidden="true">3.1.</strong> Recursão Linear</a></li><li><a href="iter.html"><strong aria-hidden="true">3.2.</strong> Tail-Recursion</a></li><li><a href="lin.html"><strong aria-hidden="true">3.3.</strong> Linearização</a></li></ol></li><li><a href="functional.html"><strong aria-hidden="true">4.</strong> Abstração Funcional</a></li><li><ol class="section"><li><a href="pow.html"><strong aria-hidden="true">4.1.</strong> Potenciação Rápida</a></li><li><a href="fix.html"><strong aria-hidden="true">4.2.</strong> Pontos Fixos</a></li></ol></li><li><a href="meta.html"><strong aria-hidden="true">5.</strong> Abstração Metalinguística</a></li><li><ol class="section"><li><a href="sym.html"><strong aria-hidden="true">5.1.</strong> Processamento Simbólico</a></li><li><a href="diff.html"><strong aria-hidden="true">5.2.</strong> Diferenciação Analítica</a></li></ol></li><li><a href="systems.html"><strong aria-hidden="true">6.</strong> Sistemas Computacionais</a></li><li><ol class="section"><li><a href="memo.html"><strong aria-hidden="true">6.1.</strong> Memoization com Closures</a></li><li><a href="constr.html"><strong aria-hidden="true">6.2.</strong> Objetos Dinâmicos</a></li><li><a href="inf.html"><strong aria-hidden="true">6.3.</strong> Lazy Streams no Infinito</a></li></ol></li><li><a href="discussion.html"><strong aria-hidden="true">7.</strong> Finale</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">((Functional (Scheme)) Maths)</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1><a class="header" href="#computando-com-scheme" id="computando-com-scheme">Computando com Scheme</a></h1>
+<h2><a class="header" href="#sobre-linguagens" id="sobre-linguagens">Sobre Linguagens</a></h2>
+<blockquote>
+<p>Qualquer notação usada para dar instruções pode ser considerada uma linguagem de programação (<a href="https://www.cs.colorado.edu/%7Ebec/courses/csci5535/reading/densem.pdf">Schmidt</a>).</p>
+</blockquote>
+<p>Talvez pela familiaridade com a área e a base formal já existente, a maioria das linguagens de programação de uso geral (incluindo Scheme) se baseia em computar funções matemáticas através de expressões.
+O mecanismo principal se baseia na &quot;coincidência&quot; de que a <strong>expressão</strong> que descreve o <strong>valor</strong> de uma função pode ser <strong>interpretada</strong> como um <strong>procedimento</strong> para <strong>computar</strong> aquele valor (<a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-29.html">Abelson e Sussman, 1968</a>).</p>
+<p>Por exemplo, tendo uma função polinomial expressa em &quot;matematiquês&quot;:</p>
+<p>\[ x^2 - x - 1 \]</p>
+<p>Podemos expressá-la com caracteres padrão em alguma linguagem (por acaso a notação abaixo é código válido de Octave, provavelmente o sendo em mais uma série de outras linguagens):</p>
+<pre><code class="language-m">x ^ 2 - x - 1
+</code></pre>
+<p>Um polinômio equivalente na <a href="https://en.wikipedia.org/wiki/Polish_notation">notação pré-fixada</a> de Lisp seria</p>
+<pre><code class="language-scheme">(+ (^ x 2) (- x) -1)
+</code></pre>
+<h3><a class="header" href="#sintaxe-e-semântica" id="sintaxe-e-semântica">Sintaxe e Semântica</a></h3>
+<blockquote>
+<p>Programas devem ser escritos para que pessoas possam os ler, e apenas incidentalmente para que máquinas os executem (<a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-7.html">Abelson e Sussman, 1968</a>).</p>
+</blockquote>
+<p>A notação das expressões de uma linguagem específica é dita a sua sintaxe; e mesmo que esse tópico não nos interesse no escopo deste minicurso, começamos falando sobre sintaxe pois apenas expressões sintaticamente corretas possuem semântica, ou seja, significado, associado a elas.</p>
+<p>Mais importante ainda, falamos da sintaxe de Scheme para destacar seu minimalismo: ela é composta essencialmente pelas chamadas <strong>expressões simbólicas</strong> (<a href="https://en.wikipedia.org/wiki/S-expression"><em>sexprs</em></a>), cada uma delas caracterizando uma árvore binária, podendo ser:</p>
+<ol>
+<li>Um átomo; ou</li>
+<li>Uma expressão na forma <code>(head . tail)</code> onde <code>head</code> e <code>tail</code> são <em>sexprs</em>.</li>
+</ol>
+<h3><a class="header" href="#pragmática" id="pragmática">Pragmática</a></h3>
+<p>Aos prospectivos utilizadores de uma linguagem de programação interessa mais um outro elemento: a <strong>pragmática</strong>, ou seja, os aspectos práticos da linguagem que a tornam útil para alcançar um conjunto de possíveis objetivos (<a href="https://www2.cs.sfu.ca/%7Ecameron/Teaching/383/syn-sem-prag-meta.html">Cameron</a>).</p>
+<p>Neste minicurso será dado enfoque especial à aplicações matemáticas de Scheme como linguagem de programação funcional, onde a principal forma de <strong>abstração</strong> é encontrada na manipulação de funções.</p>
+<h3><a class="header" href="#metalinguagem" id="metalinguagem">Metalinguagem</a></h3>
+<p>Por último, mas não menos importante, temos a ferramenta com a qual falamos sobre uma linguagem, descrevemos suas características e discutimos suas aplicações: a <strong>metalinguagem</strong> que lhe cabe.</p>
+<p>Mais adiante veremos que é possível empregar Scheme como uma linguagem de programação de uso geral que não é especialmente adequada a resolver nenhuma classe de problemas; em vez disso, seu maior potencial está na capacidade de construir e embarcar em si mesma a linguagem mais apta para fazê-lo através de abstrações metalinguísticas (<a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-25.html">Abelson e Sussman</a>).</p>
+<h2><a class="header" href="#introdução-à-scheme" id="introdução-à-scheme">Introdução à Scheme</a></h2>
+<h3><a class="header" href="#programas" id="programas">Programas</a></h3>
+<blockquote>
+<p>Os atos pelos quais a mente exerce seu poder sobre as idéias são principalmente três:
+(1) Combinando várias idéias simples em uma composta e originando assim todas as idéias complexas;
+(2) Reunindo duas idéias, simples ou complexas, a fim de ter uma visão delas, sem, contudo, unificá-las numa, obtendo por este meio todas as suas noções das relações;
+(3) Separando-as de todas as outras idéias que lhes integram, no processo chamado abstração: deste modo a mente forma todas as suas idéias gerais.
+(<a href="https://oll.libertyfund.org/titles/locke-the-works-vol-1-an-essay-concerning-human-understanding-part-1">Locke, 1689</a>)</p>
+</blockquote>
+<p>Toda a linguagem de programação que se preze possui três mecanismos básicos com os quais expressa programas:</p>
+<ol>
+<li><strong>Entidades primitivas</strong>: os objetos mais simples dos quais fala a linguagem.</li>
+<li><strong>Meios de combinação</strong>: a construção de elementos compostos através de outros mais simples.</li>
+<li><strong>Meios de abstração</strong>: pelos quais manipulamos elementos independentemente da sua complexidade.</li>
+</ol>
+<p>(<a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-10.html">Abelson e Sussman</a>).</p>
+<h3><a class="header" href="#interpretação" id="interpretação">Interpretação</a></h3>
+<p>Para testar os exemplos nas subseções a seguir, utilize alguma implementação de Scheme:</p>
+<ul>
+<li><a href="https://cisco.github.io/ChezScheme/">Chez</a> - <strong>Ótimo REPL</strong>, possui um dos interpretadores mais rápidos e uma versão adicional minimalista para distribuição de programas interpretados.</li>
+<li><a href="http://www-sop.inria.fr/mimosa/fp/Bigloo/">Bigloo</a> - Um exemplo de <strong>transpilador Scheme-&gt;C</strong> que permite gerar binários executáveis e altamente portáveis.</li>
+<li><a href="https://www.gnu.org/software/guile/">Guile</a> - É a <strong>linguagem de scripting oficial do GNU Project</strong>, sendo utilizada como linguagem de extensão e configuração do <a href="https://guix.gnu.org/">sistema operacional funcional GuixSD</a>.</li>
+<li><a href="https://racket-lang.org/">Racket</a> - Tem uma <strong>IDE feita para Scheme, o Dr. Racket</strong>; oferecendo, além da linguagem padrão, mais um grande conjunto de &quot;dialetos&quot;.</li>
+<li><a href="https://ecraven.github.io/r7rs-benchmarks/">Outros</a> - Procure implementações com comunidade ativa e que se adequem aos padrões <a href="https://en.wikipedia.org/wiki/Scheme_(programming_language)#Review_of_standard_forms_and_procedures"><em>Revised^n Report on the Algorithmic Language Scheme</em> (RnRS)</a>. Se você deseja alguma <em>feature</em> específica, confira se a sua implementação já a oferece através de algum <a href="https://srfi.schemers.org/"><em>Scheme Request For Implementation</em> (SRFI)</a>.</li>
+</ul>
+<p>Saiba consultar a <a href="https://docs.racket-lang.org/">documentação</a> da sua implementação. <br/>
+Na dúvida, <a href="https://scheme.com/tspl4/">Dybvig</a> e <a href="https://ds26gte.github.io/tyscheme/">Sitaram</a> podem ajudar.</p>
+<h3><a class="header" href="#estrutura-a-hrefhttpsdocsracket-langorgracket-cheatindexhtmlexemplosa" id="estrutura-a-hrefhttpsdocsracket-langorgracket-cheatindexhtmlexemplosa">Estrutura (<a href="https://docs.racket-lang.org/racket-cheat/index.html">exemplos</a>)</a></h3>
+<h4><a class="header" href="#primitivas" id="primitivas">Primitivas</a></h4>
+<p>Alguns exemplos de entidades primitivas em Scheme:</p>
+<pre><code class="language-scheme">; numeros
+42
+0.03
+12e-4
+67+89i
+12/40
+
+; booleanos
+#t
+#f
+
+; funcoes primitivas
++
+-
+odd?
+even?
+car
+cdr
+
+; simbolos
+'a
+'λ
+'scheme
+
+; caracteres
+#\c
+#\f
+</code></pre>
+<h4><a class="header" href="#combinações" id="combinações">Combinações</a></h4>
+<p>Vejamos os meios de combinação presentes em Scheme:</p>
+<pre><code class="language-scheme">; pares
+(cons 'head 'tail)
+(car (cons 1 2))
+(cdr (cons 1 2))
+
+; listas
+'()
+(list 1 2 3)
+(cdr '(a b c))
+
+; funcoes anonimas
+(lambda (x) x)
+(lambda (a b) (+ a b))
+
+; strings
+&quot;Hello, Scheme World!&quot;
+
+; vetores
+#(1 2 3)
+</code></pre>
+<h5><a class="header" href="#dados-vs-código" id="dados-vs-código">Dados <em>vs</em> Código</a></h5>
+<p>Listas são encadeamentos de pares (como uma corrente) terminadas em <code>'()</code>.
+Assim, os dados processados em Scheme possuem exatamente a mesma forma que seu código.
+Essa propriedade se chama <a href="https://en.wikipedia.org/wiki/Homoiconicity"><strong>Homoiconicidade</strong></a>.</p>
+<h4><a class="header" href="#abstrações" id="abstrações">Abstrações</a></h4>
+<p>São alguns meios de abstração de Scheme:</p>
+<pre><code class="language-scheme">; nomes temporarios
+(let ((x 7)
+      (y 8))
+  (+ x y))
+
+(let* ((a 2)
+       (b (+ a 1))
+       (c (* a b)))
+  (+ a b c))
+
+; definicoes
+(define x 5)
+
+(define (identity x) x)
+
+(define list
+  (lambda (first . rest) (cons first rest)))
+
+(define (foo x)
+  (define (even? n)
+    (display &quot;even? &quot;) (display n) (newline)
+    (if (= n 0)
+        #t
+        (odd? (- n 1))))
+
+  (define (odd? n)
+    (display &quot;odd? &quot;) (display n) (newline)
+    (if (= n 0)
+        #f
+        (even? (- n 1))))
+
+  (cond ((even? x) &quot;EVEN&quot;)
+        ((odd? x) &quot;ODD&quot;)
+        (else &quot;????&quot;)))
+
+; mix
+(let 2^ ((n 10)
+         (acc 1))
+  (if (= n 0) acc
+      (2^ (- n 1) (* acc 2))))
+
+(let ((a 1))
+  (define (foo x)
+    (define b (+ a x))
+    (define a 5)
+    (+ a b))
+  (display (foo 10)) (newline)
+  a)
+</code></pre>
+<blockquote>
+<p>Sim, <code>foo</code> tem vários problemas.
+Tente corrigi-los.</p>
+<p>Procure escrever em Scheme a definição de um procedimento que calcula em um ponto <code>x</code> o valor do polinômio \( x^2 - x -1 \).</p>
+<p>Em seguida, implemente um procedimento <code>(list-ref lst n)</code> que retorna o n-ésimo elemento de uma lista.</p>
+</blockquote>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="bib.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="lang.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="bib.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="lang.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

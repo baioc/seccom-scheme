@@ -1,0 +1,379 @@
+<!DOCTYPE HTML>
+<html lang="pt-BR" class="sidebar-visible no-js">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Pontos Fixos - ((Functional (Scheme)) Maths)</title>
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="Oficina de Matemática Funcional em Scheme da SECCOM UFSC 2019">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500" rel="stylesheet" type="text/css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
+    </head>
+    <body class="navy">
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = "navy";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            document.body.className = theme;
+            document.querySelector('html').className = theme + ' js';
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li><a href="about.html"><strong aria-hidden="true">1.</strong> Sobre a Oficina</a></li><li><ol class="section"><li><a href="bib.html"><strong aria-hidden="true">1.1.</strong> Bibliografia</a></li></ol></li><li><a href="intro.html"><strong aria-hidden="true">2.</strong> Computando com Scheme</a></li><li><ol class="section"><li><a href="lang.html"><strong aria-hidden="true">2.1.</strong> Sobre Linguagens</a></li><li><a href="eg.html"><strong aria-hidden="true">2.2.</strong> Introdução à Scheme</a></li></ol></li><li><a href="recursion.html"><strong aria-hidden="true">3.</strong> Repetição via Recursão</a></li><li><ol class="section"><li><a href="rec.html"><strong aria-hidden="true">3.1.</strong> Recursão Linear</a></li><li><a href="iter.html"><strong aria-hidden="true">3.2.</strong> Tail-Recursion</a></li><li><a href="lin.html"><strong aria-hidden="true">3.3.</strong> Linearização</a></li></ol></li><li><a href="functional.html"><strong aria-hidden="true">4.</strong> Abstração Funcional</a></li><li><ol class="section"><li><a href="pow.html"><strong aria-hidden="true">4.1.</strong> Potenciação Rápida</a></li><li><a href="fix.html" class="active"><strong aria-hidden="true">4.2.</strong> Pontos Fixos</a></li></ol></li><li><a href="meta.html"><strong aria-hidden="true">5.</strong> Abstração Metalinguística</a></li><li><ol class="section"><li><a href="sym.html"><strong aria-hidden="true">5.1.</strong> Processamento Simbólico</a></li><li><a href="diff.html"><strong aria-hidden="true">5.2.</strong> Diferenciação Analítica</a></li></ol></li><li><a href="systems.html"><strong aria-hidden="true">6.</strong> Sistemas Computacionais</a></li><li><ol class="section"><li><a href="memo.html"><strong aria-hidden="true">6.1.</strong> Memoization com Closures</a></li><li><a href="constr.html"><strong aria-hidden="true">6.2.</strong> Objetos Dinâmicos</a></li><li><a href="inf.html"><strong aria-hidden="true">6.3.</strong> Lazy Streams no Infinito</a></li></ol></li><li><a href="discussion.html"><strong aria-hidden="true">7.</strong> Finale</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar" class="menu-bar">
+                    <div id="menu-bar-sticky-container">
+                        <div class="left-buttons">
+                            <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                                <i class="fa fa-paint-brush"></i>
+                            </button>
+                            <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                                <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="navy">Navy (default)</button></li>
+                                <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                            </ul>
+                            
+                            <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            
+                        </div>
+
+                        <h1 class="menu-title">((Functional (Scheme)) Maths)</h1>
+
+                        <div class="right-buttons">
+                            <a href="print.html" title="Print this book" aria-label="Print this book">
+                                <i id="print-button" class="fa fa-print"></i>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2><a class="header" href="#pontos-fixos" id="pontos-fixos">Pontos Fixos</a></h2>
+<p>Vejamos agora um procedimento que não define um algoritmo para computar um valor, mas sim um método numérico para aproximar a raíz quadrada de um número:</p>
+<pre><code class="language-scheme">;; metodo babilonico
+(define (sqrt x)
+  (define (try guess)
+    (if (good-enough? guess) guess
+        (try (improve guess))))
+
+  (define (improve guess)
+    (average guess (/ x guess)))
+
+  (define (good-enough? guess)
+    (&lt; (abs (- (square guess) x)) tolerance))
+
+  (try 1.0))
+</code></pre>
+<pre><code class="language-scheme">;; PS:
+(define tolerance 1e-15)
+(define (average a b) (/ (+ a b) 2))
+(define (square x) (* x x))
+</code></pre>
+<p>Com um procedimento semelhante é possível aproximar uma solução da <a href="https://en.wikipedia.org/wiki/Transcendental_equation">equação transcedental</a> \( cos(x) = x \).</p>
+<pre><code class="language-scheme">(define (fixcos)
+  (define (retry old new)
+    (if (approx? new old) new
+        (retry new (cos new))))
+
+  (define (approx? a b)
+    (&lt; (abs (- a b)) tolerance))
+
+  (retry 0.0 (cos 0.0)))
+
+(define x (fixcos)) ;; solucao
+</code></pre>
+<blockquote>
+<p>Um método &quot;manual&quot; para achar esse valor envolve uma calculadora científica e a seguinte sequência de botões:</p>
+<pre><code class="language-plaintext">[1] [=] [COS] [ANS] [=] [=] [=] ...
+</code></pre>
+<p>Tendo isso em mente, tente implementar um procedimento <code>(fixpoint f x)</code> que generalize ambos os métodos apresentados.</p>
+</blockquote>
+<p>Nota-se uma ideia em comum: procuramos um <strong>ponto fixo</strong> ou ponto invariante k de uma função f(x) tal que \( f(k) = k \).
+Assim, supondo um valor intermediário c onde \( f(c) \approx k \), temos que \( f(f(...f(c)...)) = f^n(f(c)) = f^n(k) = k \), onde aplicamos f até que não haja mais variação (com uma certa tolerância) no resultado.</p>
+<pre><code class="language-scheme">(define (fixpoint f x . opts-tol)
+  (let* ((tolerance (maybe-car opts-tol 1e-9))
+         (approx? (lambda (a b) (&lt; (abs (- a b)) tolerance))))
+    (let try ((old x) (new (f x)))
+      (if (approx? old new) new
+          (try new (f new))))))
+</code></pre>
+<pre><code class="language-scheme">(fixpoint cos 0)
+
+(define (phi-rat tol)
+  (fixpoint
+    (lambda (rat)
+      (let ((fcurr (numerator rat))
+            (fprev (denominator rat)))
+        (/ (+ fcurr fprev) fcurr)))
+    1/1
+    tol))
+(define phi (exact-&gt;inexact (phi-rat 1e-15))) ;; =&gt; 102334155/63245986 = fib(40)/fib(39)
+
+(define (average-damp f)
+  (lambda (x) (average (f x) x)))
+
+(define (sqrt x)
+  (fixpoint (average-damp (lambda (y) (/ x y))) 1.0))
+
+(define (root f x . opts-tol) ;; metodo de Newton
+  (let* ((dx (maybe-car opts-tol 1e-8))
+         (df (deriv f dx)))
+    (fixpoint (lambda (x) (- x (/ (f x) (df x)))) x dx)))
+
+(define (deriv f dx)
+  (lambda (x) (/ (- (f (+ x dx)) (f x)) dx)))
+
+(define (sqrt x)
+  (root (lambda (y) (- x (square y))) 1.0))
+
+(define pi (root sin 3))
+
+(define phi (root (lambda (x) (+ (square x) (- x) -1)) 1.0 1e-11))
+</code></pre>
+<p>O <a href="https://en.wikipedia.org/wiki/Lambda_calculus">Cálculo Lambda</a> de Alonzo Church generaliza a noção de ponto fixo para funções, possibilitando a computação de procedimentos recursivos.
+Vejamos um exemplo partindo do algoritmo fatorial:</p>
+<pre><code class="language-scheme">(define (fac n)
+  (define f fac)
+  (if (= n 0) 1 (* n (f (- n 1)))))
+
+(define (facto n)
+  (define f facto)
+  (define (aux n)
+    (if (= n 0) 1 (* n (f (- n 1)))))
+  (aux n))
+
+(define (factor n)
+  (define (aux f n)
+    (if (= n 0) 1 (* n (f (- n 1)))))
+  (aux factor n))
+
+(define (factori n)
+  (define (aux f)
+    (lambda (n)
+      (if (= n 0) 1 (* n (f (- n 1))))))
+  ((aux factori) n))
+
+(define (factoria n)
+  (define (aux f)
+    (lambda (n)
+      (if (= n 0) 1 (* n (f (- n 1))))))
+  (define (rec f)
+    (lambda (n)
+      ((aux (f f)) n)))
+  (let ((fact (rec rec)))
+    (fact n)))
+</code></pre>
+<p>Perceba que a estrutura e o uso do procedimento <code>rec</code> podem ser facilmente generalizados na função de alta ordem ilustrada abaixo.
+Esse procedimento também é conhecido como <a href="https://en.wikipedia.org/wiki/Fixed-point_combinator#Y_combinator">Operador Y</a>.</p>
+<pre><code class="language-scheme">(define (fix f)
+  (define (g x)
+    (lambda (arg)
+      ((f (x x)) arg)))
+  (g g))
+</code></pre>
+<pre><code class="language-scheme">(define fact
+  (fix (lambda (f)
+         (lambda (n)
+           (if (= n 0) 1 (* n (f (- n 1))))))))
+</code></pre>
+<p>Imagine o processo como uma iteração sobre uma função <code>f</code> que inicialmente não sabe calcular fatoriais: a cada passo <code>f</code> é substituída por uma versão melhorada dela mesma <a href="https://en.wikipedia.org/wiki/Denotational_semantics">[1]</a>.
+Podemos representar o estado atual de <code>f</code> como um conjunto de duplas <code>(x,y)</code>, onde <code>f</code> associa uma entrada <code>x</code> à saída <code>y</code>.</p>
+<pre><code class="language-plaintext">Fe(x) = {}
+F0(x) = { (0,1) }
+F1(x) = { (0,1), (1,1) }
+F2(x) = { (0,1), (1,1), (2,2) }
+F3(x) = { (0,1), (1,1), (2,2), (3,6) }
+F4(x) = { (0,1), (1,1), (2,2), (3,6), (4,24) }
+F5(x) = { (0,1), (1,1), (2,2), (3,6), (4,24), (5,120) }
+...
+Fn(x) = fact(x), para x &lt;= n
+</code></pre>
+<p>Na prática, basta aplicar o modelo de substituição para computar a função recursivamente:</p>
+<pre><code class="language-scheme">(define curryed-fac
+  (lambda (f)
+    (lambda (n) (if (= n 0) 1 (* n (f (- n 1)))))))
+...
+(define fact (fix curryed-fac))
+;; substituindo fix(f=curryed-fac)
+(define fact
+  (define (g x)
+    (lambda (arg) ((curryed-fac (x x)) arg)))
+  (g g))
+;; substituindo g(x=g)
+(define fact
+  (lambda (arg) ((curryed-fac (g g)) arg)))
+...
+(fact 5)
+;; substituindo fact(arg=5)
+((curryed-fact (g g)) 5)
+;; substituindo g(x=g)
+((curryed-fact (lambda (arg) ((curryed-fac (g g)) arg))) 5)
+;; perceba que o lambda eh exatamente a definicao de fact
+((curryed-fact fact) 5)
+;; substituindo curryed-fact(f=fact)
+((lambda (n) (if (= n 0) 1 (* n (fact (- n 1))))) 5)
+;; substituindo lambda(n=5)
+(* 5 (fact 4))
+...
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="pow.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+                            <a rel="next" href="meta.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a href="pow.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="meta.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>
