@@ -1,0 +1,10 @@
+[book]
+authors = ["Gabriel B. Sant'Anna"]
+src = "src"
+description = "Oficina de Matemática Funcional em Scheme da SECCOM UFSC 2019"
+title = "((Functional (Scheme)) Maths)"
+language = "pt-BR"
+
+[output.html]
+default-theme = "navy"
+mathjax-support = true
