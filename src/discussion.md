@@ -17,7 +17,7 @@ Para citar algumas:
 
 ## Scripts Anexos
 
-Os trechos de código utilizados na oficina podem ser encontrados no meu [repositório do GitHub](https://github.com/baioc/baioc.github.io/tree/master/seccom-scheme/src/scm).
+Os trechos de código utilizados na oficina podem ser encontrados no meu [repositório do GitHub](https://github.com/baioc/seccom-scheme/tree/master/src/scm).
 
 ## Discussão e Comentários
 
